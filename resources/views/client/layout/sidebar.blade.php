@@ -2,7 +2,7 @@
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
-  <a href="index3.html" class="brand-link">
+  <a href="javascript:void(0)" class="brand-link">
     <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
     <span class="brand-text font-weight-light">Edith Token</span>
   </a>
@@ -13,7 +13,10 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
       <div class="info">
-        <a href="{{ url('/client/home') }}" class="d-block">{{ Auth::user()->name }}</a>
+        <a href="{{ url('/client/home') }}" class="d-block">{{Auth::user()->first_name}} {{ Auth::user()->last_name}}
+          ({{ Auth::user()->unique_id }})
+        </a>
+
       </div>
     </div>
 
@@ -111,16 +114,16 @@
         if (data == 1) {
           // console.log("it's One");
           // window.location.href = url + "/client/process_mining";
-         
+
           swal({
             // text: "<img src='{{asset('image/1.png')}}' style='width:150px;'>",
             html: true,
             title: 'Please wait, mining in progress!',
-            icon: 'info', 
+            icon: 'info',
             focusConfirm: false,
             confirmButtonClass: "btn-primary",
             confirmButtonText: "Ok",
-           
+
           });
         } else {
           swal({
