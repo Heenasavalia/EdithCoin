@@ -13,8 +13,19 @@
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
       <div class="info">
-        <a href="{{ url('/client/home') }}" class="d-block">{{Auth::user()->first_name}} {{ Auth::user()->last_name}}
+        <a href="{{ url('/client/home') }}" class="d-block">
+          @if(Auth::user()->name !=null )
+          {{Auth::user()->name}}
+          @else
+          {{Auth::user()->first_name}} {{ Auth::user()->last_name}}
+
+          @endif
+
+          @if(Auth::user()->unique_id ==null )
+          @else
           ({{ Auth::user()->unique_id }})
+          @endif
+          
         </a>
 
       </div>
