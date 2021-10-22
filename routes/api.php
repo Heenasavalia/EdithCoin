@@ -19,3 +19,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/token', 'TokenController@getRemainingToken');
 
+Route::get('getspid/{sponser_id}', 'ApiController@getspid');
+
+Route::get('UserName', 'ApiController@UserName');

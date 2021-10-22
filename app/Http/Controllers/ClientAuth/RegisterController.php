@@ -49,7 +49,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'sponsor_id' => 'required',
             'email' => 'required|email|max:255|unique:clients',
             'password' => 'required|min:6|confirmed',
         ]);
@@ -63,11 +66,18 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return Client::create([
-            'name' => $data['name'],
+        // dd($data);
+        $unique_id = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3). mt_rand(100000, 999999);
+        $client =  Client::create([
+            'first_name' => ucfirst(strtolower($data['first_name'])),
+            'last_name' => ucfirst(strtolower($data['last_name'])),
+            'sponsor_id' => $data['sponsor_id'],
+            'unique_id' => $data['unique_id'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+
+        return $client;
     }
 
     /**
