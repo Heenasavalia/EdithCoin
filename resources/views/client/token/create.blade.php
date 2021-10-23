@@ -80,7 +80,7 @@
                   
 
                   <small class="text-danger">{{ $errors->first('amount') }}</small>
-                  Token Price:- 0.05 </br>
+                  Token Price:- 0.05<b>$</b> </br>
                   Total Token count:-
 
                   <b><span id="total_records"></span></b>
@@ -98,7 +98,7 @@
 
                   <input type="text" name="no_of_token" class="form-control" id="no_of_token" placeholder="Token" autocomplete="off">
                   <small class="text-danger">{{ $errors->first('no_of_token') }}</small>
-                  Token Price:- 0.05 </br>
+                  Token Price:- 0.05<b>$</b> </br>
                   Total Amount:-
 
                   <b><span id="total_amount"></span></b>
