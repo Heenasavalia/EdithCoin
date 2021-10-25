@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-
+<style>
+  img.img-circle.elevation-2 {
+    margin-top: 14px;
+  }
+</style>
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a href="javascript:void(0)" class="brand-link">
@@ -11,7 +15,7 @@
   <div class="sidebar">
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-
+      <a><img src="{{ asset('image/user.png') }}" class="img-circle elevation-2" alt="User Image"></a>
       <div class="info">
         <a href="{{ url('/client/home') }}" class="d-block">
           @if(Auth::user()->name !=null )
@@ -20,12 +24,13 @@
           {{Auth::user()->first_name}} {{ Auth::user()->last_name}}
 
           @endif
-
+          </br>
+          User ID :-
           @if(Auth::user()->unique_id ==null )
           @else
           ({{ Auth::user()->unique_id }})
           @endif
-          
+
         </a>
 
       </div>
@@ -83,8 +88,8 @@
         </li>
 
         <li class="nav-item">
-          <a href="{{ url('/client/withdraw') }}" class="nav-link">
-            <!-- <a href="javascript:void(0);" class="nav-link" id="process_mining"> -->
+          <!-- <a href="{{ url('/client/withdraw') }}" class="nav-link"> -->
+          <a href="javascript:void(0);" class="nav-link" id="process_mining">
             <i class="fa fa-th-list"></i>&nbsp;
             <p>
               Withdraw

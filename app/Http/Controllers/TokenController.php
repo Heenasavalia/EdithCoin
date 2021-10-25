@@ -20,6 +20,16 @@ use Illuminate\Support\Facades\Redirect;
 
 class TokenController extends Controller
 {
+
+    public function affilate(){
+        $client = Auth::user();
+        $my_directs = Client::where('sponsor_id',$client->unique_id)->orderBy('created_at','DESC')->paginate(10);
+        // dd($my_directs);
+        // dd($client);
+        return view('client.affilate',['my_directs'=>$my_directs]);
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -46,7 +56,7 @@ class TokenController extends Controller
 
                 $startdate = Carbon::parse($request->all()['from_date'])->format('Y-m-d H:i:s');
                 $enddate = Carbon::parse($request->all()['to_date'])->format('Y-m-d H:i:s');
-                $data =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '1')->whereBetween('created_at', [$startdate, $enddate])->get();
+                $data =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->whereBetween('created_at', [$startdate, $enddate])->get();
                 // $data = Token::where('client_id', $id)->whereBetween('created_at', [$startdate, $enddate])->get();
             }
             // dd($data);
@@ -62,7 +72,7 @@ class TokenController extends Controller
     {
         // dd(Auth::user()->created_at);
         // $all_tokens = Token::where('client_id', Auth::user()->id)->where('is_mining', 0)->sum('no_of_token');
-        $payment_token =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '1')->sum('amount_total_fiat');
+        $payment_token =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
         $one_token_price = Helpers::getonetokenprice(Auth::user()->created_at);
         $amount = $payment_token;
         $all_tokens = $amount / $one_token_price;
@@ -75,7 +85,7 @@ class TokenController extends Controller
         $total_amt = Token::where('client_id', Auth::user()->id)->sum('total_amount');
         // $tokens = Token::where('client_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
-        $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '1')->orderBy('id', 'DESC')->paginate(10);
+        $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->paginate(10);
         // dump($tokens->items[]);
 
         // $coin = CoinpaymentTransactionItem::
@@ -234,7 +244,7 @@ class TokenController extends Controller
     {
         // dd("yes");
         $client_id = Auth::user()->id;
-        $last_get =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '1')->get();
+        $last_get =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->get();
         
         // $last_get = Token::where('client_id', $client_id)->latest()->first();
         if (!$last_get->isEmpty()) {
@@ -272,7 +282,7 @@ class TokenController extends Controller
         $client_id = Auth::user()->id;
         $client = Auth::user();
         // $all_token_yet = Token::where('client_id', $client_id)->sum('no_of_token');
-        $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '1')->sum('amount_total_fiat');
+        $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
 
         if ($all_token_yet == 0 || $all_token_yet == '0') {
             return redirect()->back()->with('error', 'Please create at least one Token.');

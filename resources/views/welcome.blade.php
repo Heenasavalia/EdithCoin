@@ -1,99 +1,126 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('client.layout.auth')
 
-        <title>Client Portal</title>
+@section('content')
+<style>
+    .brand-link .brand-image {
+        /* float: left; */
+        line-height: 2.8;
+        margin-left: 7.8rem;
+        margin-right: 0.5rem;
+        margin-top: -16px;
+        max-height: 45px;
+        width: auto;
+    }
+</style>
+<div class="login-box">
+    <div class="login-logo">
+        <a href="#">Client Portal</a>
+    </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+            <a href="javascript:void(0)" class="brand-link">
+                <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="brand-image img-circle elevation-3">
+            </a>
+            </br>
+            <p class="login-box-msg">Edith Token</p>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+            <form class="form-horizontal" role="form" method="POST" action="{{ url('/client/login') }}">
+                {{ csrf_field() }}
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
 
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
+                <div class="input-group{{ $errors->has('email') ? ' has-error' : '' }} mb-3">
+                    <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" autofocus>
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
                 </div>
-            @endif
+                @if ($errors->has('email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('email') }}</strong>
+                </span>
+                @endif
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
+
+
+
+
+                <div class="input-group{{ $errors->has('password') ? ' has-error' : '' }} mb-3">
+                    <input id="password" type="password" class="form-control" name="password">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="input-group-addon my_addon" id="show_pwd" onclick="show_pwd()"><i class="fa fa-eye-slash"></i></span>
+                            <span class="input-group-addon my_addon" id="hide_pwd" onclick="hide_pwd()" style="display: none;"><i class="fa fa-eye"></i></span>
+                            <!-- <span class="fas fa-lock"><i class="fa fa-eye"></i></span> -->
+                        </div>
+                    </div>
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                @if ($errors->has('password'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('password') }}</strong>
+                </span>
+                @endif
+
+
+
+                <div class="row">
+                    <!-- <div class="col-8">
+                        <div class="icheck-primary" id="remeber_div">
+                            <input type="checkbox" name="remember">
+                            <label for="remember">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div> -->
+                    <!-- /.col -->
+                    <div class="col-4 submit_div">
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </div>
+                    <!-- /.col -->
                 </div>
-            </div>
+            </form>
+
+
+            <!-- /.social-auth-links -->
+
+            <p class="mb-0">
+            <p class="mb-1 forgot_link">
+
+                <a href="{{ url('/client/password/reset') }}">Forgot Password?</a>
+            </p>
+            <a href="{{ url('/client/register') }}" class="text-center">Register a new membership</a>
+            </p>
         </div>
-    </body>
-</html>
+        <!-- /.login-card-body -->
+    </div>
+</div>
+
+@endsection
+@push('scripts')
+<script>
+    function show_pwd() {
+        var type = $('input[name=password]').attr('type');
+        if (type == "password") {
+            $('input[name=password]').attr('type', 'text')
+            document.getElementById('hide_pwd').style.display = 'block';
+            document.getElementById('show_pwd').style.display = 'none';
+        } else {
+            $('input[name=password]').attr('type', 'password')
+        }
+    };
+
+    function hide_pwd() {
+        var type = $('input[name=password]').attr('type');
+        if (type == "password") {
+            $('input[name=password]').attr('type', 'text')
+        } else {
+            $('input[name=password]').attr('type', 'password')
+            document.getElementById('show_pwd').style.display = 'block';
+            document.getElementById('hide_pwd').style.display = 'none';
+        }
+    };
+</script>
+@endpush('scripts')

@@ -10,9 +10,9 @@ class ApiController extends Controller
 
     public function getspid($sponsor_id)
     {
-        $user = Client::where('sponsor_id', $sponsor_id)->first();
+        $user = Client::where('unique_id', $sponsor_id)->first();
         if ($user) {
-            $sponsor_id = $user->sponsor_id;
+            $sponsor_id = $user->unique_id;
         } else {
             $sponsor_id = null;
         }

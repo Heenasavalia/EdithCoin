@@ -14,3 +14,5 @@ Route::get('process_mining','TokenController@ProcessMiningPage');
 
 
 Route::get('get_token_record','TokenController@get_token_record');
+
+Route::get('affilate','TokenController@affilate');

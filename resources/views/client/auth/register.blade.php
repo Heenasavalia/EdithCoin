@@ -34,18 +34,7 @@
 
       <form class="form-horizontal" id="client_registration" role="form" method="POST" action="{{ url('/client/register') }}">
         {{ csrf_field() }}
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          <div class="form-group{{ $errors->has('sponsor_id') ? ' has-error' : '' }}">
-            <input id="sponsor_id" type="text" class="form-control" name="sponsor_id" value="{{ old('sponsor_id') }}" autofocus placeholder="Sponsor Id*">
-            @if ($errors->has('sponsor_id'))
-            <span class="help-block">{{ $errors->first('sponsor_id') }}</span>
-            @endif
 
-            <div id="name_division" class="col-lg-12col-sm-12" style="display:none">
-              <label class="business_label" for="sponsor_id"><span id="sp_name"></span></label>
-            </div>
-          </div>
-        </div>
 
         <div id="fields">
           <div class="col-lg-12 col-md-12 col-sm-12">
@@ -107,6 +96,21 @@
             </div>
           </div>
 
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group{{ $errors->has('sponsor_id') ? ' has-error' : '' }}">
+              <input id="sponsor_id" type="text" class="form-control" name="sponsor_id" value="{{ old('sponsor_id') }}" autofocus placeholder="Sponsor Id (Optional)">
+
+              <!-- @if ($errors->has('sponsor_id'))
+              <span class="help-block">{{ $errors->first('sponsor_id') }}</span>
+              @endif -->
+
+              <div id="name_division" class="col-lg-12col-sm-12" style="display:none">
+                <label class="business_label" for="sponsor_id"><span id="sp_name"></span></label>
+              </div>
+
+            </div>
+          </div>
+
 
           <div class="form-group">
             <div class="col-md-6 col-md-offset-4">
@@ -143,31 +147,25 @@
     return result;
   }
 
-  document.getElementById("unique_id").value = randomString(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') + randomString(6, '0123456789');
+  document.getElementById("unique_id").value = 'EDT' + randomString(6, '0123456789');
 </script>
 
 
 <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 
 <script>
-  $('#fields input').attr('disabled', true);
   $(document).ready(function() {
     var url = "{{ url('/') }}";
     $("#sponsor_id").keyup(function() {
       var sponsor_id = $("input[name=sponsor_id]").val();
-      console.log(sponsor_id);
-      if (sponsor_id == '') {
-        $("#name_division").hide();
-        $('#fields input').attr('disabled', true);
-      }
       if (sponsor_id.length == 9) {
-        var sp_id = $("#sponsor_id").val();
+        var unique_id = $("#sponsor_id").val();
         $.ajax({
           type: "GET",
-          url: "{{ url('/') }}" + "/api/getspid/" + sp_id,
+          url: "{{ url('/') }}" + "/api/getspid/" + unique_id,
           success: function(res) {
             console.log(res);
             if (res.sponsor_id != null) {
@@ -181,13 +179,12 @@
           }
         });
       } else {
-        $('#fields input').attr('disabled', true);
         $("#sp_name").text("Please enter valid sponsor id").css('color', '#e03f3f').css('font-weight', '600');
         $("#name_division").show();
       }
-
     });
   });
 </script>
+
 
 @endpush('scripts')

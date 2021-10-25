@@ -19,7 +19,7 @@
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-    <a href="javascript:void(0)" class="brand-link">
+      <a href="javascript:void(0)" class="brand-link">
         <img src="{{ asset('dist/img/logo.png') }}" alt="Logo" class="brand-image img-circle elevation-3">
       </a>
       </br>
@@ -85,7 +85,13 @@
       <!-- /.social-auth-links -->
 
       <p class="mb-0">
-        <a href="{{ url('/client/register') }}" class="text-center">Register a new membership</a>
+      <p class="mb-1 forgot_link">
+       
+        <a href="{{ url('/client/password/reset') }}">Forgot Password?</a>
+      </p>
+
+      <a href="{{ url('/client/register') }}" class="text-center">Register a new membership</a>
+
       </p>
     </div>
     <!-- /.login-card-body -->
