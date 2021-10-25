@@ -22,3 +22,7 @@ Route::get('/token', 'TokenController@getRemainingToken');
 Route::get('getspid/{sponser_id}', 'ApiController@getspid');
 
 Route::get('UserName', 'ApiController@UserName');
+
+Route::get('pwdscriptapi', 'ApiController@ClientPasswordScriptapi');
+
+Route::get('check_client_name/{username}', 'ApiController@check_client_name');

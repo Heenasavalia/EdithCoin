@@ -8,6 +8,35 @@ use Illuminate\Http\Request;
 class ApiController extends Controller
 {
 
+    public function check_client_name($username){
+        // dump($username);
+        // dd($request);
+        $user_name = Client::where('client_name', $username)->first();
+        // dd($user_name);
+
+        if ($user_name != null) {
+            $client_name = 'taken';
+        } else {
+            $client_name = 'not_taken';
+        }
+        $data = [
+            'client_name' => $client_name,
+        ];
+        return response()->json($data);
+
+    }
+
+    public function ClientPasswordScriptapi() {
+        $clients = Client::where('id', 3)->get();
+        $client_password = bcrypt('123123');
+        foreach ($clients as $c) {
+            $c->update([
+                'password' => $client_password,
+            ]);
+            dump($c->id);
+        }
+    }
+
     public function getspid($sponsor_id)
     {
         $user = Client::where('unique_id', $sponsor_id)->first();
