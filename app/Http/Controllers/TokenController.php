@@ -21,13 +21,13 @@ use Illuminate\Support\Facades\Redirect;
 class TokenController extends Controller
 {
 
-    public function affilate(){
+    public function affilate()
+    {
         $client = Auth::user();
-        $my_directs = Client::where('sponsor_id',$client->unique_id)->orderBy('created_at','DESC')->paginate(10);
+        $my_directs = Client::where('sponsor_id', $client->unique_id)->orderBy('created_at', 'DESC')->paginate(10);
         // dd($my_directs);
         // dd($client);
-        return view('client.affilate',['my_directs'=>$my_directs]);
-
+        return view('client.affilate', ['my_directs' => $my_directs]);
     }
 
     /**
@@ -245,53 +245,56 @@ class TokenController extends Controller
         // dd("yes");
         $client_id = Auth::user()->id;
         $last_get =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->get();
-        
+
         // $last_get = Token::where('client_id', $client_id)->latest()->first();
         if (!$last_get->isEmpty()) {
             return response()->json(1);
-        }else{
+        } else {
             return response()->json(0);
         }
-       
-        
     }
     public function ProcessMiningPage()
     {
         // dd("yes");
         // $now = Carbon::now();
         // dd($now);   
-        $client_id = Auth::user()->id;
+        $client = Auth::user();
+        // dump($client);
+        $mining = $client->is_mining;
+        // dd($mining);
+        return view('client.token.process_mining', ['mining' => $mining]);
 
-        $last_get = Token::where('client_id', $client_id)->latest()->first();
-        // dd($last_get);
-        if($last_get != null){
-            $expired_at = $last_get->expired_at;
-            return view('client.token.process_mining', ['last_get' => $last_get, 'expired_at' => $expired_at]);
-            // return redirect()->back()->with('error', 'Please create at least one Token.');
-        }else{
-            return redirect('/client/process_mining')->with('error', 'Please create at least one Token.');
-        }
-        
+        // if($last_get != null){
+        //     $expired_at = $last_get->expired_at;
+        //     return view('client.token.process_mining', ['last_get' => $last_get, 'expired_at' => $expired_at]);
+        //     // return redirect()->back()->with('error', 'Please create at least one Token.');
+        // }else{
+        //     return redirect('/client/process_mining')->with('error', 'Please create at least one Token.');
+        // }
+
     }
 
 
     public function processminingtoken(Request $request)
     {
 
+
         $data = $request->all();
         $client_id = Auth::user()->id;
         $client = Auth::user();
-        // $all_token_yet = Token::where('client_id', $client_id)->sum('no_of_token');
-        $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
 
+        // dd("token mining");
+
+        // return redirect()->back()->with('success', 'ccheck good');
+        $all_token_yet = Token::where('client_id', $client_id)->sum('no_of_token');
+        $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
+        // dd($all_token_yet);
         if ($all_token_yet == 0 || $all_token_yet == '0') {
             return redirect()->back()->with('error', 'Please create at least one Token.');
         } else {
             // dd($all_token_yet);
             $mining_token_no = ($all_token_yet * 20 / 100) / 60;
-
             $no_of_token = $mining_token_no;
-
 
             $one_token_price = Helpers::getonetokenprice($client->created_at);
             $total_amount = $no_of_token * $one_token_price;
@@ -308,13 +311,14 @@ class TokenController extends Controller
             $data['expired_at'] = $expired_at;
 
             $plan = "token";
-            dd($data);
 
             $token = Token::create($data);
-
+            if ($token) {
+                $upd = Client::where('id', $client_id)->update(['is_mining' => "1"]);
+            }
             $plan = "token";
             $remove_token = CountToken::first();
-            // $min = 
+            
             if ($remove_token) {
                 $min = $remove_token->total_count - $mining_token_no;
                 $num = number_format((float)$min, 6, '.', '');

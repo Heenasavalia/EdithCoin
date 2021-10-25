@@ -10,9 +10,8 @@ Route::any('fetch_data','TokenController@fetch_data')->name('fetch_data');
 
 Route::get('getamttoken/{type}/{value}','TokenController@getamttoken');
 
-Route::get('process_mining','TokenController@ProcessMiningPage');
-
+Route::get('process_mining/{time}','TokenController@ProcessMiningPage');
 
 Route::get('get_token_record','TokenController@get_token_record');
 
-Route::get('affilate','TokenController@affilate');
+Route::get('affilate/{time}','TokenController@affilate');

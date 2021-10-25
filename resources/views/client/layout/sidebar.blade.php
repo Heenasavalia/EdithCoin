@@ -44,6 +44,8 @@
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
 
+
+
         <li class="nav-item has-treeview">
           <a href="{{ url('/client/home') }}" class="nav-link">
             <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -67,9 +69,14 @@
           </a>
         </li>
 
+
+        <?php
+        $current_time = \Carbon\Carbon::now()->timestamp;
+        ?>
         <li class="nav-item">
-          <!-- <a href="{{ url('/client/process_mining') }}" class="nav-link" id="process_mining"> -->
-          <a href="javascript:void(0);" class="nav-link" id="process_mining">
+
+          <a href="{{ url('/client/process_mining/'.$current_time) }}" class="nav-link">
+            <!-- <a href="javascript:void(0);" class="nav-link" id="process_mining"> -->
             <i class="nav-icon fas fa-ellipsis-h"></i>
             <p>
               Process Mining
@@ -78,7 +85,7 @@
         </li>
 
         <li class="nav-item">
-          <a href="{{ url('/client/affilate') }}" class="nav-link">
+          <a href="{{ url('/client/affilate/'.$current_time) }}" class="nav-link">
             <!-- <a href="javascript:void(0);" class="nav-link" id="process_mining"> -->
             <i class="fas fa-circle nav-icon"></i>&nbsp;
             <p>
@@ -89,7 +96,7 @@
 
         <li class="nav-item">
           <!-- <a href="{{ url('/client/withdraw') }}" class="nav-link"> -->
-          <a href="javascript:void(0);" class="nav-link" id="process_mining">
+          <a href="javascript:void(0);" class="nav-link">
             <i class="fa fa-th-list"></i>&nbsp;
             <p>
               Withdraw

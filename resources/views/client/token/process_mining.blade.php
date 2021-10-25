@@ -1,11 +1,7 @@
 @extends('client.layout.client_layout')
 
 @section('content')
-<style>
-  div#mine_div {
-    display: none;
-  }
-</style>
+
 
 <div class="content-header">
   <div class="container-fluid">
@@ -41,16 +37,19 @@
             <h3 class="card-title">Process Mining</h3>
           </div>
 
+          @if($mining == "0")
+
           <div class="row">
             <div class="col-8" id="mine_div">
               <div class="card-body">
-                <a class="btn btn-block btn-success btn-lg btn_mine">
-                  <!-- <a href="{{ url('/client/process_mining_side') }}" class="btn btn-block btn-success btn-lg btn_mine" id="mine_div"> -->
+                <!-- <a class="btn btn-block btn-success btn-lg btn_mine"> -->
+                <a href="{{ url('/client/process_mining_side') }}" class="btn btn-block btn-success btn-lg btn_mine" id="mine_div">
                   <span>Mine</span>
                 </a>
               </div>
             </div>
           </div>
+          @else
 
           <div class="row">
             <div class="col-8 count_div" id="count_div">
@@ -61,16 +60,9 @@
               </div>
             </div>
           </div>
+          @endif
 
         </div>
-
-
-        <span id="countdown" class="timer"></span>
-
-
-
-        <!-- <h3 style="color:#FF0000" align="center">
-          You will be logged out in : <span id='timer'></span> -->
 
 
       </div>
@@ -87,27 +79,27 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script type="text/javascript">
-  function makeTimer() {
-    var expired_at = '{{ $expired_at }}';
 
-    var currentdate = new Date();
-    var dateStringWithTime = moment(currentdate).format('YYYY-MM-DD HH:mm:ss');
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
-    expired_at = (Date.parse(expired_at) / 1000);
-    dateStringWithTime = (Date.parse(dateStringWithTime) / 1000);
+<script>
+  var d = new Date();
+  d.setHours(24, 0, 0, 0);
+  var countDownDate = d.setHours(24, 0, 0, 0);
 
-    var timeLeft = expired_at - dateStringWithTime;
+  var myfunc = setInterval(function() {
+    var now = new Date().getTime();
+    // var countDownDate = new Date("Oct 25, 2021 12:40:00").getTime();
+    
+    var timeleft = countDownDate - now;
 
-
-
-    var days = Math.floor(timeLeft / 86400);
-    var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
-    var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600)) / 60);
-    var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+    var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
 
     // console.log(hours, minutes, seconds);
 
@@ -121,33 +113,13 @@
       seconds = "0" + seconds;
     }
 
-    console.log(hours, minutes, seconds);
+    // console.log(hours, minutes, seconds);
 
-    if (hours == '00' && minutes == '00' && seconds == '00') {
-        $("#mine_div").show();
-        $("#count_div").hide();
-    } else {
-      // $("#hours").html("<a href='javascript:void(0)' class='btn btn-block btn-danger btn-lg'>" + hours + "<span>:</span>" + minutes + "<span>:</span>" + seconds + "<span></span>" + "</a>");
-    }
+    $("#hours").html("<a href='javascript:void(0)' class='btn btn-block btn-danger btn-lg'>" + hours + "<span>:</span>" + minutes + "<span>:</span>" + seconds + "<span></span>" + "</a>");
 
 
-  }
-  setInterval(function() {
-    makeTimer();
-  }, 1000);
+  }, 1000)
 </script>
-
-<script>
-
-</script>
-
-
-<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-
-
 
 
 @endpush('scripts')
