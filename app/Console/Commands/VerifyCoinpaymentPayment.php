@@ -72,7 +72,7 @@ class VerifyCoinpaymentPayment extends Command
                     'status_text' => $res->status_text
                 ]);
             }
-            // dd("is this done");
+            
         }
         // dd("stop it");
     }
