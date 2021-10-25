@@ -65,8 +65,15 @@ class VerifyCoinpaymentPayment extends Command
             $response = json_decode($data);
 
             foreach ($response->result as $key => $res) {
-                CoinpaymentTransactions::where('status', '0')->where('txn_id', $key)->update(['status' => $res->status]);
+                // print_r($res);
+                CoinpaymentTransactions::where('status', '0')->where('txn_id', $key)
+                ->update([
+                    'status' => $res->status,
+                    'status_text' => $res->status_text
+                ]);
             }
+            // dd("is this done");
         }
+        // dd("stop it");
     }
 }
