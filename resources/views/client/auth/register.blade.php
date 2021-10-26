@@ -61,7 +61,7 @@
               <input id="email" type="email" class="form-control" name="email" autocomplete="off" placeholder="E-mail address*">
               @if ($errors->has('email'))
               <span class="help-block">
-                <strong>{{ $errors->first('email') }}</strong>
+                {{ $errors->first('email') }}
               </span>
               @endif
             </div>
@@ -74,9 +74,9 @@
               <div id="client_name_division" class="col-lg-12col-sm-12" style="display:none">
                 <label class="business_label" for="client_name"><span id="span_client_name"></span></label>
               </div>
-              <!-- @if ($errors->has('client_name'))
+              @if ($errors->has('client_name'))
               <span class="help-block">{{ $errors->first('client_name') }}</span>
-              @endif -->
+              @endif
             </div>
           </div>
 
