@@ -30,7 +30,7 @@
 
 
         <div class="input-group{{ $errors->has('email') ? ' has-error' : '' }} mb-3">
-          <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" autofocus>
+          <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" autofocus placeholder="E-mail address*">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -48,7 +48,7 @@
 
 
         <div class="input-group{{ $errors->has('password') ? ' has-error' : '' }} mb-3">
-          <input id="password" type="password" class="form-control" name="password">
+          <input id="password" type="password" class="form-control" name="password" placeholder="Password*">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
