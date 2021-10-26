@@ -67,20 +67,20 @@
             </div>
           </div>
 
-          <!-- <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group{{ $errors->has('client_name') ? ' has-error' : '' }}">
               <input id="client_name" type="text" class="form-control" name="client_name" autocomplete="off" placeholder="User name*">
-             
-              <div id="client_name_division" class="col-lg-12col-sm-12" style="display:none">
-                <label class="business_label" for="client_name"><span id="client_name"></span></label>
-              </div>
-               @if ($errors->has('client_name'))
-              <span class="help-block">{{ $errors->first('client_name') }}</span>
-              @endif  
-            </div>
-          </div> -->
 
-          <div class="col-lg-12 col-md-12 col-sm-12">
+              <div id="client_name_division" class="col-lg-12col-sm-12" style="display:none">
+                <label class="business_label" for="client_name"><span id="span_client_name"></span></label>
+              </div>
+              <!-- @if ($errors->has('client_name'))
+              <span class="help-block">{{ $errors->first('client_name') }}</span>
+              @endif -->
+            </div>
+          </div>
+
+          <div class="col-lg-12 col-md-12 col-sm-12" style="display:none">
             <div class="form-group{{ $errors->has('unique_id') ? ' has-error' : '' }}">
               <input readonly id="unique_id" type="text" class="form-control" name="unique_id" value="{{ old('unique_id') }}" autofocus placeholder="User name*">
               @if ($errors->has('unique_id'))
@@ -203,27 +203,24 @@
     });
 
 
-   
+
     $('#client_name').on('blur', function() {
       var username = $('#client_name').val();
+      console.log(username);
       $.ajax({
         url: "{{ url('/') }}" + "/api/check_client_name/" + username,
         type: 'GET',
         // data: {
         //   'username': username,
         // },
-        success: function(response) {
-          console.log(response);
-          
-          if (response.client_name == 'taken') {
-            $("#client_name").text("Sorry... Username already taken").css('color', '#e03f3f').css('font-weight', '600');
+        success: function(res) {
+          console.log(res);
+          if (res.client_name != null) {
+            $("#span_client_name").text("Sorry... Username already taken").css('color', '#e03f3f').css('font-weight', '600');
             $("#client_name_division").show();
-          } else if (response.client_name == 'not_taken') {
-            $("#client_name").text("Username available").css('color', '#0caf09').css('font-weight', '600');
+          } else {
+            $("#span_client_name").text("Username available").css('color', '#0caf09').css('font-weight', '600');
             $("#client_name_division").show();
-            // $('#client_name').parent().removeClass();
-            // $('#client_name').parent().addClass("form_success");
-            // $('#client_name').siblings("span").text('Username available');
           }
         }
       });

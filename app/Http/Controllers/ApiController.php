@@ -11,13 +11,13 @@ class ApiController extends Controller
     public function check_client_name($username){
         // dump($username);
         // dd($request);
-        $user_name = Client::where('client_name', $username)->first();
-        // dd($user_name);
+        $client = Client::where('client_name', $username)->first();
+        // dd($user_name->client_name);
 
-        if ($user_name != null) {
-            $client_name = 'taken';
+        if ($client) {
+            $client_name = $client->client_name;
         } else {
-            $client_name = 'not_taken';
+            $client_name = null;
         }
         $data = [
             'client_name' => $client_name,
