@@ -52,7 +52,7 @@ class RegisterController extends Controller
 
             'first_name' => 'required|max:255',
             'last_name' => 'required|max:255',
-            'client_name' => 'required|unique:clients',
+            // 'client_name' => 'required|unique:clients',
             'email' => 'required|email|max:255|unique:clients',
             'password' => 'required|min:6|confirmed',
         ]);
@@ -80,7 +80,7 @@ class RegisterController extends Controller
             'sponsor_id' => $sponsor_id,
             'unique_id' => $data['unique_id'],
             'email' => $data['email'],
-            'client_name' => $data['client_name'],
+            // 'client_name' => $data['client_name'],
             'password' => bcrypt($data['password']),
         ]);
 
