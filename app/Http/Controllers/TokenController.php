@@ -23,11 +23,20 @@ class TokenController extends Controller
 
     public function affilate()
     {
+        // dd("yes");
         $client = Auth::user();
-        $my_directs = Client::where('sponsor_id', $client->unique_id)->orderBy('created_at', 'DESC')->paginate(10);
-        // dd($my_directs);
+        // $my_directs = Client::where('sponsor_id', $client->unique_id)->orderBy('created_at', 'DESC')->paginate(10);
+        $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->pluck('id')->toArray();
+        // dump($my_directs);
+
+        $token = Token::with('client')->whereIn('client_id', $my_directs)->get();
+        //dump($token);
+
+        // dd($token);
+
         // dd($client);
-        return view('client.affilate', ['my_directs' => $my_directs]);
+
+        return view('client.affilate', ['token' => $token]);
     }
 
     /**
@@ -163,13 +172,7 @@ class TokenController extends Controller
 
         $token = Token::create($data);
 
-        $remove_token = CountToken::first();
-        // dd($remove_token);
-        if ($remove_token) {
-            $min = $remove_token->total_count - $no_of_token;
-            $num = number_format((float)$min, 6, '.', '');
-            $update = $remove_token->update(['total_count' => $num]);
-        }
+
         // $token = Token::create($data);
         if ($token) {
             // dump("it's work");
@@ -183,7 +186,13 @@ class TokenController extends Controller
             //     $get = Token::where('id',$token->id)->delete();
             // }
             // dd($transaction);
-
+            $remove_token = CountToken::first();
+            // dd($remove_token);
+            if ($remove_token) {
+                $min = $remove_token->total_count - $no_of_token;
+                $num = number_format((float)$min, 6, '.', '');
+                $update = $remove_token->update(['total_count' => $num]);
+            }
 
 
             return Redirect::to($transaction);
@@ -318,7 +327,7 @@ class TokenController extends Controller
             }
             $plan = "token";
             $remove_token = CountToken::first();
-            
+
             if ($remove_token) {
                 $min = $remove_token->total_count - $mining_token_no;
                 $num = number_format((float)$min, 6, '.', '');

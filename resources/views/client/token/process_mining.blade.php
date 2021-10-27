@@ -86,14 +86,19 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
 <script>
+
+
+
   var d = new Date();
+  console.log(d);
   d.setHours(24, 0, 0, 0);
   var countDownDate = d.setHours(24, 0, 0, 0);
+  console.log(countDownDate);
 
   var myfunc = setInterval(function() {
     var now = new Date().getTime();
     // var countDownDate = new Date("Oct 25, 2021 12:40:00").getTime();
-    
+
     var timeleft = countDownDate - now;
 
     var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));

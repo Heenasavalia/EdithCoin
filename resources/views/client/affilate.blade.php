@@ -44,19 +44,19 @@
                       <!-- <th>Currency Code</th> -->
                       <th>User ID</th>
                       <th>Name</th>
+                      <th>Token</th>
+                      <th>Amount (USD)</th>
                       <th>Created Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @if ($my_directs->count() == 0)
+                   
+                    @foreach($token as $my_direct)
                     <tr>
-                      <td colspan="4" style="text-align:center;">No Token to display.</td>
-                    </tr>
-                    @endif
-                    @foreach($my_directs as $my_direct)
-                    <tr>
-                      <td style="padding: 5px 10px;">{{$my_direct->unique_id}}</td>
-                      <td style="padding: 5px 10px;">{{$my_direct->first_name}} {{$my_direct->last_name}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->client->unique_id}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->client->first_name}} {{$my_direct->client->last_name}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->no_of_token}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->total_amount}}</td>
                       <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($my_direct->created_at)) }}</td>
                     </tr>
 
@@ -66,13 +66,7 @@
 
                 </table>
 
-                <div id="page_div">
-                  {!! $my_directs->links() !!}
-                  <h6>
-                    <b>Displaying {{$my_directs->count()}} of {{ $my_directs->total() }} Direct(s).</b>
-                  </h6>
-                </div>
-
+               
               </div>
             </div>
           </div>
