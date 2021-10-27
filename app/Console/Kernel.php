@@ -24,6 +24,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $timestamp = time();
+        
+       
+     
+        $date = gmdate('r', $timestamp);
+        // dump($date);
+        
+        // dd($timestamp);
         $schedule->command('Coinpayment:Verify_coin_payment')->everyMinute();
         $schedule->command('Mining:Mining_token')->dailyAt('00:00');
     }

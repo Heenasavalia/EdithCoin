@@ -137,7 +137,7 @@
 
       </form>
 
-      <a href="{{ url('/client/login') }}" class="text-center">I already have a membership</a>
+      <a href="{{ url('/') }}" class="text-center">I already have a membership</a>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
