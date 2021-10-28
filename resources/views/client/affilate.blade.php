@@ -40,7 +40,6 @@
                 <table id="token_data" class="table table-striped table-bordered nowrap">
                   <thead>
                     <tr>
-
                       <!-- <th>Currency Code</th> -->
                       <th>User ID</th>
                       <th>Name</th>
@@ -50,7 +49,11 @@
                     </tr>
                   </thead>
                   <tbody>
-                   
+                  @if ($token->count() == 0)
+                    <tr>
+                      <td colspan="5" style="text-align:center;">No Affilate to display.</td>
+                    </tr>
+                    @endif
                     @foreach($token as $my_direct)
                     <tr>
                       <td style="padding: 5px 10px;">{{$my_direct->client->unique_id}}</td>
@@ -59,12 +62,12 @@
                       <td style="padding: 5px 10px;">{{$my_direct->total_amount}}</td>
                       <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($my_direct->created_at)) }}</td>
                     </tr>
-
                     @endforeach
                   </tbody>
 
 
                 </table>
+               
 
                
               </div>

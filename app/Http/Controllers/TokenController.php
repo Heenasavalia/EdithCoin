@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AffilateIncome;
 use Illuminate\Http\Request;
 use App\Token;
 use App\Client;
@@ -163,19 +164,47 @@ class TokenController extends Controller
         // payment gateway
 
         $data['client_id'] = $client_id;
-        $data['no_of_token'] = (int)$no_of_token;
+        $data['no_of_token'] = $no_of_token;
         $data['total_amount'] = number_format($total_amount, 2);;
         $data['one_token_price'] = (float)$one_token_price;
         $data['is_mining'] = 0;
 
         // dd($data);
+        // $my_up_lavel = Client::where('unique_id', $client->sponsor_id)->first();
+        // // $total_usd_amount = 
+        // // dd($no_of_token);
+        // if($no_of_token <= 50000){
+        //     dump("In 50,000");
+        //     $total_token = ($no_of_token * 5) / 100;
+        // }elseif($no_of_token > 50000 && $no_of_token <= 100000){
+        //     dump("In 50,000 to 1,00,000");
+        //     $total_token = ($no_of_token * 10) / 100;
+        // }elseif($no_of_token > 100000 && $no_of_token <= 500000){
+        //     dump("In 1,00,000 to 5,00,000");
+        //     $total_token = ($no_of_token * 15) / 100;
+        // }elseif($no_of_token > 500000 && $no_of_token <= 999999){
+        //     dump("In 5,00,000 to 9,99,999");
+        //     $total_token = ($no_of_token * 20) / 100;
+        // }
+        // $total_usd_amount = $total_token * $one_token_price;
+        
+        // dump('$total_token:-- ',$total_token);
+        // dump('$total_usd_amount:-- ',$total_usd_amount);
+        // dd($my_up_lavel);
 
         $token = Token::create($data);
 
 
         // $token = Token::create($data);
         if ($token) {
+            // $creat_affilate_income = AffilateIncome::create([
+            //     'client_id' => $client_id,
+            //     'direct_id' => $$my_up_lavel->id,
+            //     'affilate_amount' => $total_usd_amount,
+            //     'affilate_token' =>  $no_of_token,
+            // ]);
             // dump("it's work");
+            
             // payment
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             // print_r($transaction);
@@ -320,6 +349,8 @@ class TokenController extends Controller
             $data['expired_at'] = $expired_at;
 
             $plan = "token";
+
+            dd($data);
 
             $token = Token::create($data);
             if ($token) {
