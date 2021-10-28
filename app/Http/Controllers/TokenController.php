@@ -204,7 +204,7 @@ class TokenController extends Controller
             //     'affilate_token' =>  $no_of_token,
             // ]);
             // dump("it's work");
-            
+
             // payment
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             // print_r($transaction);
@@ -301,15 +301,6 @@ class TokenController extends Controller
         $mining = $client->is_mining;
         // dd($mining);
         return view('client.token.process_mining', ['mining' => $mining]);
-
-        // if($last_get != null){
-        //     $expired_at = $last_get->expired_at;
-        //     return view('client.token.process_mining', ['last_get' => $last_get, 'expired_at' => $expired_at]);
-        //     // return redirect()->back()->with('error', 'Please create at least one Token.');
-        // }else{
-        //     return redirect('/client/process_mining')->with('error', 'Please create at least one Token.');
-        // }
-
     }
 
 
@@ -321,46 +312,38 @@ class TokenController extends Controller
         $client_id = Auth::user()->id;
         $client = Auth::user();
 
-        // dd("token mining");
-
-        // return redirect()->back()->with('success', 'ccheck good');
-        $all_token_yet = Token::where('client_id', $client_id)->sum('no_of_token');
+        
         $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
-        // dd($all_token_yet);
+        
         if ($all_token_yet == 0 || $all_token_yet == '0') {
             return redirect()->back()->with('error', 'Please create at least one Token.');
         } else {
             // dd($all_token_yet);
-            $mining_token_no = ($all_token_yet * 20 / 100) / 60;
-            $no_of_token = $mining_token_no;
-
             $one_token_price = Helpers::getonetokenprice($client->created_at);
-            $total_amount = $no_of_token * $one_token_price;
+            $no_of_token = $all_token_yet / $one_token_price;
+            $total_mining_token = ($no_of_token * 20 / 100) / 60;
+
+            $total_amount = $total_mining_token * $one_token_price;
 
             $data['client_id'] = $client_id;
-            $data['no_of_token'] = number_format((float)$no_of_token, 6, '.', '');
+            $data['no_of_token'] = number_format((float)$total_mining_token, 6, '.', '');
             $data['total_amount'] = number_format($total_amount, 2);
             $data['one_token_price'] = (float)$one_token_price;
             $data['is_mining'] = 1;
+
             $currentDateTime = \Carbon\Carbon::now();
             $newDateTime = $currentDateTime->modify("+24 hours");
             $expired_at = \Carbon\Carbon::parse($newDateTime->format("Y-m-d H:i:s"));
 
             $data['expired_at'] = $expired_at;
 
-            $plan = "token";
-
-            dd($data);
-
             $token = Token::create($data);
             if ($token) {
                 $upd = Client::where('id', $client_id)->update(['is_mining' => "1"]);
             }
-            $plan = "token";
             $remove_token = CountToken::first();
-
             if ($remove_token) {
-                $min = $remove_token->total_count - $mining_token_no;
+                $min = $remove_token->total_count - $total_mining_token;
                 $num = number_format((float)$min, 6, '.', '');
                 $update = $remove_token->update(['total_count' => $num]);
             }
@@ -382,21 +365,16 @@ class TokenController extends Controller
         $client = Auth::user();
 
         $one_token_price = Helpers::getonetokenprice($client->created_at);
-        // dd($one_token_price);
-
         if ($plan == "token") {
             $no_of_token = $value;
             $result = $no_of_token * $one_token_price;
         } else {
             $amount = $value;
             $result = $amount / $one_token_price;
-            // $total_amount = $amount;
         }
-
         $data = [
             'result' => $result
         ];
-
         return response()->json($data);
     }
 }
