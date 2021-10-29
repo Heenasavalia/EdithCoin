@@ -36,15 +36,11 @@
       </div>
     </div>
 
-
-
     <!-- Sidebar Menu -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-
-
 
         <li class="nav-item has-treeview">
           <a href="{{ url('/client/home') }}" class="nav-link">
@@ -56,26 +52,21 @@
           </a>
         </li>
 
-
-
-
         <li class="nav-item">
           <a href="{{ url('/client/token/create') }}" class="nav-link">
             <i class="nav-icon far fa-plus-square"></i>
             <p>
               Buy Token
-
             </p>
           </a>
         </li>
 
-
         <?php
         $current_time = \Carbon\Carbon::now()->timestamp;
         ?>
-        <li class="nav-item">
 
-          <a href="{{ url('/client/process_mining/'.$current_time) }}" class="nav-link">
+        <li class="nav-item">
+          <a id="my_token" href="{{ url('/client/process_mining/'.$current_time) }}" class="nav-link">
             <!-- <a href="javascript:void(0);" class="nav-link" id="process_mining"> -->
             <i class="nav-icon fas fa-ellipsis-h"></i>
             <p>
@@ -84,18 +75,42 @@
           </a>
         </li>
 
-        <li class="nav-item">
-          <a href="{{ url('/client/affilate/'.$current_time) }}" class="nav-link">
-            <!-- <a href="javascript:void(0);" class="nav-link" id="process_mining"> -->
+        <!-- <li class="nav-item">
+           <a href="{{ url('/client/affilate/'.$current_time) }}" class="nav-link"> 
+          <a href="javascript:void(0);" class="nav-link">
             <i class="fas fa-circle nav-icon"></i>&nbsp;
             <p>
-              Affilate History
+              Affilate
             </p>
           </a>
+        </li> -->
+
+        <li class="nav-item">
+          <a id="tree" href="javascript:void(0);" class="nav-link">
+            <i class="fas fa-sitemap"></i>&nbsp;
+            <p>
+              Affiliate
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a id="affilate_user" href="{{ url('client/affilates/'.$current_time) }}" class="nav-link">
+                <i class="fas fa-user"></i>&nbsp;
+                <p>Affiliate</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="javascript:void(0);" class="nav-link" id="process_mining">
+                <i class="fas fa-clock"></i>&nbsp;
+                <p>Affiliate History</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
         <li class="nav-item">
-          <!-- <a href="{{ url('/client/withdraw') }}" class="nav-link"> -->
+          <!-- <a href="{{ url('/client/withdraw/'.$current_time) }}" class="nav-link"> -->
           <a href="javascript:void(0);" class="nav-link">
             <i class="fa fa-th-list"></i>&nbsp;
             <p>
@@ -103,9 +118,6 @@
             </p>
           </a>
         </li>
-
-
-
 
       </ul>
     </nav>
@@ -119,13 +131,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <script type="text/javascript">
+   var url = "{{ url('/') }}";
+    $('.nav-pills').find('li a').each(function() {
+        str1 = window.location.href;
+        str2 = "process_mining";
+        str3 = "affilates"; 
+        str4 = "javascript:void(0);";
+       
+   
+        if ($(this).attr('href') == window.location.href) {
+            $(this).addClass('active');
+        } else if ((str1.indexOf(str2) != -1)) {
+            $("#my_token").addClass('active');
+        } else if ((str1.indexOf(str3) != -1)) {
+            $("#affilate_user").addClass('active');
+        } else if ((str1.indexOf(str4) != -1)) {
+            $("#tree").addClass('active');
+        }
+    });
+</script>
+<!-- 
+<script type="text/javascript">
   $('.nav-pills').find('li a').each(function() {
     if ($(this).attr('href') == window.location.href) {
       $(this).addClass('active');
     }
   });
-</script>
-
+</script> -->
 <script type="text/javascript">
   $("#process_mining").click(function() {
     var url = "{{ url('/') }}";
@@ -135,13 +167,9 @@
       success: function(data) {
         console.log(data);
         if (data == 1) {
-          // console.log("it's One");
-          // window.location.href = url + "/client/process_mining";
-
           swal({
-            // text: "<img src='{{asset('image/1.png')}}' style='width:150px;'>",
             html: true,
-            title: 'Please wait, mining in progress!',
+            title: 'Please wait, work in progress!',
             icon: 'info',
             focusConfirm: false,
             confirmButtonClass: "btn-primary",
@@ -161,4 +189,5 @@
     });
   });
 </script>
+
 @endpush('scripts')

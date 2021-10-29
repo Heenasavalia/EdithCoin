@@ -36,7 +36,7 @@
             <p>Tokens</p>
           </div>
           <div class="icon">
-            <i class="ion ion-bag"></i>
+            <i class="ion ion-pie-graph"></i>
           </div>
           <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
         </div>
@@ -50,7 +50,8 @@
             <p>Mined Tokens</p>
           </div>
           <div class="icon">
-            <i class="ion ion-bag"></i>
+            <i class="nav-icon fas fa-ellipsis-h"></i>
+           
           </div>
           <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
         </div>
@@ -64,7 +65,7 @@
             <p>Total Tokens</p>
           </div>
           <div class="icon">
-            <i class="ion ion-bag"></i>
+            <i class="fa fa-cubes"></i>
           </div>
           <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
         </div>
@@ -73,12 +74,11 @@
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>0$</h3>
-
+            <h3>0 $</h3>
             <p>Affilate Income</p>
           </div>
           <div class="icon">
-            <i class="ion ion-bag"></i>
+            <i class="fa fa-sitemap"></i>
           </div>
           <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
         </div>

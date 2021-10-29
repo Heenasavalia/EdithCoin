@@ -10,4 +10,10 @@ class AffilateIncome extends Model
     protected $fillable = [
         'client_id','direct_id','affilate_amount','affilate_token'
     ];
+
+    public function sender() {
+        return $this->belongsTo('App\Client', 'client_id', 'id');
+    }
+  
+    
 }

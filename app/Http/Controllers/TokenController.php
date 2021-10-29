@@ -21,6 +21,39 @@ use Illuminate\Support\Facades\Redirect;
 
 class TokenController extends Controller
 {
+    public function my_minig_tokens()
+    {
+        $payment_token =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
+        $one_token_price = Helpers::getonetokenprice(Auth::user()->created_at);
+        $amount = $payment_token;
+        $all_tokens = $amount / $one_token_price;
+        $total_mining_token = ($all_tokens * 20 / 100) / 60;
+        $total_token = number_format((float)$total_mining_token, 6, '.', '');
+        return response()->json($total_token);
+    }
+
+    public function withdraw()
+    {
+        dump("yesh page run");
+        return view('client.token.withdraw');
+    }
+
+    public function affilates()
+    {
+        $client = Auth::user();
+        $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->get();
+        return view('client.affilates', ['my_directs' => $my_directs]);
+    }
+    public function getaffilatesusers(Request $request)
+    {
+        $id = $request->all()['client_id'];
+
+        $me = Client::where('id', $id)->first();
+
+        $data = Client::where('sponsor_id', $me->unique_id)->where('status', 'Active')->get();
+        //dd($id);
+        return datatables::of($data)->make(true);
+    }
 
     public function affilate()
     {
@@ -28,16 +61,18 @@ class TokenController extends Controller
         $client = Auth::user();
         // $my_directs = Client::where('sponsor_id', $client->unique_id)->orderBy('created_at', 'DESC')->paginate(10);
         $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->pluck('id')->toArray();
-        // dump($my_directs);
-
-        $token = Token::with('client')->whereIn('client_id', $my_directs)->get();
+        // dd($my_directs);
+        // 
+        $token = Token::with('client', 'affilate')->whereIn('client_id', $my_directs)->get();
         //dump($token);
 
         // dd($token);
+        $my_income = AffilateIncome::with('sender')->where('direct_id', $client->id)->get();
 
-        // dd($client);
+        $merged = $token->merge($my_income);
+        // dd($merged);
 
-        return view('client.affilate', ['token' => $token]);
+        return view('client.affilate', ['token' => $token, 'my_income' => $my_income, 'merged' => $merged]);
     }
 
     /**
@@ -100,13 +135,16 @@ class TokenController extends Controller
 
         // $coin = CoinpaymentTransactionItem::
 
+        $affilate_income = AffilateIncome::where('direct_id', Auth::user()->id)->sum('affilate_amount');
+
         return view('client.home', [
             // 'result' => $result,
             'all_tokens' => $all_tokens,
             'all_tokens_mining' => $all_tokens_mining,
             'total' => $total,
             'total_amt' => $total_amt,
-            'tokens' => $tokens
+            'tokens' => $tokens,
+            'affilate_income' => $affilate_income
         ]);
     }
 
@@ -165,37 +203,18 @@ class TokenController extends Controller
 
         $data['client_id'] = $client_id;
         $data['no_of_token'] = $no_of_token;
-        $data['total_amount'] = number_format($total_amount, 2);;
+        $data['total_amount'] = number_format($total_amount, 2);
         $data['one_token_price'] = (float)$one_token_price;
         $data['is_mining'] = 0;
 
-        // dd($data);
-        // $my_up_lavel = Client::where('unique_id', $client->sponsor_id)->first();
-        // // $total_usd_amount = 
-        // // dd($no_of_token);
-        // if($no_of_token <= 50000){
-        //     dump("In 50,000");
-        //     $total_token = ($no_of_token * 5) / 100;
-        // }elseif($no_of_token > 50000 && $no_of_token <= 100000){
-        //     dump("In 50,000 to 1,00,000");
-        //     $total_token = ($no_of_token * 10) / 100;
-        // }elseif($no_of_token > 100000 && $no_of_token <= 500000){
-        //     dump("In 1,00,000 to 5,00,000");
-        //     $total_token = ($no_of_token * 15) / 100;
-        // }elseif($no_of_token > 500000 && $no_of_token <= 999999){
-        //     dump("In 5,00,000 to 9,99,999");
-        //     $total_token = ($no_of_token * 20) / 100;
-        // }
-        // $total_usd_amount = $total_token * $one_token_price;
-        
-        // dump('$total_token:-- ',$total_token);
-        // dump('$total_usd_amount:-- ',$total_usd_amount);
-        // dd($my_up_lavel);
+
+
+
+
 
         $token = Token::create($data);
 
 
-        // $token = Token::create($data);
         if ($token) {
             // $creat_affilate_income = AffilateIncome::create([
             //     'client_id' => $client_id,
@@ -206,6 +225,11 @@ class TokenController extends Controller
             // dump("it's work");
 
             // payment
+            // if($client_id != 1){
+            //     $income = Helpers::AffilateIncome($client, $no_of_token);
+            // }
+
+
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             // print_r($transaction);
             // // dd();
@@ -299,8 +323,9 @@ class TokenController extends Controller
         $client = Auth::user();
         // dump($client);
         $mining = $client->is_mining;
-        // dd($mining);
-        return view('client.token.process_mining', ['mining' => $mining]);
+        $my_tokens = Token::where('client_id', $client->id)->where('is_mining', 1)->get();
+        // dd($my_token);
+        return view('client.token.process_mining', ['mining' => $mining, 'my_tokens' => $my_tokens]);
     }
 
 
@@ -312,9 +337,9 @@ class TokenController extends Controller
         $client_id = Auth::user()->id;
         $client = Auth::user();
 
-        
+
         $all_token_yet =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
-        
+
         if ($all_token_yet == 0 || $all_token_yet == '0') {
             return redirect()->back()->with('error', 'Please create at least one Token.');
         } else {
