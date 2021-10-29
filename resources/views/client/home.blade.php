@@ -26,6 +26,7 @@
 <!-- Main content -->
 <div class="content">
   <div class="container-fluid">
+
     <div class="row">
       <div class="col-lg-3 col-6">
         <!-- small box -->
@@ -75,7 +76,8 @@
         <div class="small-box bg-warning">
           <div class="inner">
             <h3>0 $</h3>
-            <p>Affilate Income</p>
+
+            <p>Affiliate Income</p>
           </div>
           <div class="icon">
             <i class="fa fa-sitemap"></i>
@@ -86,9 +88,6 @@
       <!-- /.col-md-6 -->
     </div>
     <!-- /.col-md-6 -->
-
-
-
     <div class="row">
       <div class="col-12">
 
@@ -121,7 +120,6 @@
                     </div>
                   </div>
                 </div>
-
 
                 <table id="token_data" class="table table-striped table-bordered nowrap">
                   <thead>
@@ -182,16 +180,12 @@
                   </h6>
                 </div>
 
-
                 <div class="col-md-5" id="search_div">
                   <h6>
                     Search Records Data-
                     <b><span id="total_records"></span></b>
                   </h6>
                 </div>
-
-
-
 
               </div>
             </div>
@@ -207,7 +201,7 @@
   <!-- /.row -->
 </div>
 <!-- /.container-fluid -->
-</div>
+
 <!-- /.content -->
 
 

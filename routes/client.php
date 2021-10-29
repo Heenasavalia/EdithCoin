@@ -18,7 +18,7 @@ Route::get('get_token_record','TokenController@get_token_record');
 
 Route::get('withdraw/{time}','TokenController@withdraw');
 
-Route::get('affilates/{time}','TokenController@affilates');
+Route::get('affiliates/{time}','TokenController@affilates');
 
 Route::any('getaffilatesusers','TokenController@getaffilatesusers');
 

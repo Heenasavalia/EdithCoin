@@ -95,7 +95,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a id="affilate_user" href="{{ url('client/affilates/'.$current_time) }}" class="nav-link">
+              <a id="affiliate_user" href="{{ url('client/affiliates/'.$current_time) }}" class="nav-link">
                 <i class="fas fa-user"></i>&nbsp;
                 <p>Affiliate</p>
               </a>
@@ -135,7 +135,7 @@
     $('.nav-pills').find('li a').each(function() {
         str1 = window.location.href;
         str2 = "process_mining";
-        str3 = "affilates"; 
+        str3 = "affiliates"; 
         str4 = "javascript:void(0);";
        
    
@@ -144,7 +144,7 @@
         } else if ((str1.indexOf(str2) != -1)) {
             $("#my_token").addClass('active');
         } else if ((str1.indexOf(str3) != -1)) {
-            $("#affilate_user").addClass('active');
+            $("#affiliate_user").addClass('active');
         } else if ((str1.indexOf(str4) != -1)) {
             $("#tree").addClass('active');
         }
@@ -179,7 +179,7 @@
         } else {
           swal({
             html: true,
-            title: 'Please create at least one Token.',
+            title: 'Please wait, work in progress.',
             icon: 'info',
             focusConfirm: false,
             confirmButtonClass: "btn-primary",
