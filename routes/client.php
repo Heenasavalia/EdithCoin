@@ -14,4 +14,13 @@ Route::get('process_mining/{time}','TokenController@ProcessMiningPage');
 
 Route::get('get_token_record','TokenController@get_token_record');
 
-Route::get('affilate/{time}','TokenController@affilate');
+// Route::get('affilate/{time}','TokenController@affilate');
+
+Route::get('withdraw/{time}','TokenController@withdraw');
+
+Route::get('affilates/{time}','TokenController@affilates');
+
+Route::any('getaffilatesusers','TokenController@getaffilatesusers');
+
+
+Route::any('my_minig_tokens','TokenController@my_minig_tokens');

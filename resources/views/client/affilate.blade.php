@@ -9,9 +9,9 @@
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-       <div class="col-sm-6">
+      <div class="col-sm-6">
         <h1 class="m-0"></h1>
-      </div> 
+      </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -26,7 +26,7 @@
 <!-- Main content -->
 <div class="content">
   <div class="container-fluid">
-  
+
     <div class="row">
       <div class="col-12">
 
@@ -43,23 +43,23 @@
                       <!-- <th>Currency Code</th> -->
                       <th>User ID</th>
                       <th>Name</th>
-                      <th>Token</th>
                       <th>Amount (USD)</th>
+                      <th>Token</th>
                       <th>Created Date</th>
                     </tr>
                   </thead>
                   <tbody>
-                  @if ($token->count() == 0)
+                    @if ($token->count() == 0)
                     <tr>
                       <td colspan="5" style="text-align:center;">No Affilate to display.</td>
                     </tr>
                     @endif
-                    @foreach($token as $my_direct)
+                    @foreach($my_income as $my_direct)
                     <tr>
-                      <td style="padding: 5px 10px;">{{$my_direct->client->unique_id}}</td>
-                      <td style="padding: 5px 10px;">{{$my_direct->client->first_name}} {{$my_direct->client->last_name}}</td>
-                      <td style="padding: 5px 10px;">{{$my_direct->no_of_token}}</td>
-                      <td style="padding: 5px 10px;">{{$my_direct->total_amount}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->sender->unique_id}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->sender->first_name}} {{$my_direct->sender->last_name}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->affilate_amount}}</td>
+                      <td style="padding: 5px 10px;">{{$my_direct->affilate_token}}</td>
                       <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($my_direct->created_at)) }}</td>
                     </tr>
                     @endforeach
@@ -67,9 +67,9 @@
 
 
                 </table>
-               
 
-               
+
+
               </div>
             </div>
           </div>

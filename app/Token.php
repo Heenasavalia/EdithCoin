@@ -15,4 +15,9 @@ class Token extends Model
     {
         return $this->hasOne('App\Client', 'id', 'client_id');
     }
+
+    public function affilate()
+    {
+        return $this->hasOne('App\AffilateIncome', 'id', 'client_id');
+    }
 }
