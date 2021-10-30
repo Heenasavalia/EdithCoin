@@ -12,7 +12,7 @@ use Hexters\CoinPayment\CoinPayment;
 
 class Helpers
 {
-    public static function AffilateIncome($client, $no_of_token)
+    public static function AffilateIncome($client, $no_of_token,$id)
     {
 
         $my_up_lavel = Client::where('unique_id', $client->sponsor_id)->first();
@@ -36,6 +36,8 @@ class Helpers
 
         $one_token_price = Helpers::getonetokenprice($client->created_at);
         $total_usd_amount = $total_token * $one_token_price;
+
+        $update_income = Token::where('id',$id)->update(['affiliate_income' => $total_usd_amount]);
 
         $creat_affilate_income = AffilateIncome::create([
             'client_id' => $client->id,

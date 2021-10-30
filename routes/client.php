@@ -16,7 +16,7 @@ Route::get('get_token_record','TokenController@get_token_record');
 
 // Route::get('affilate/{time}','TokenController@affilate');
 
-Route::get('withdraw/{time}','TokenController@withdraw');
+
 
 Route::get('affiliates/{time}','TokenController@affilates');
 
@@ -24,3 +24,11 @@ Route::any('getaffilatesusers','TokenController@getaffilatesusers');
 
 
 Route::any('my_minig_tokens','TokenController@my_minig_tokens');
+
+
+Route::resource('withdrawn','WithdrawnController');
+
+Route::any('withdraw-create','TokenController@withdrawCreate');
+
+Route::get('affiliate-history/{time}','TokenController@AffiliateHistory');
+

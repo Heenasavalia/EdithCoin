@@ -101,7 +101,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="javascript:void(0);" class="nav-link" id="process_mining">
+              <a id="affiliate_history" href="{{ url('/client/affiliate-history/'.$current_time)}}" class="nav-link" id="process_mining">
                 <i class="fas fa-clock"></i>&nbsp;
                 <p>Affiliate History</p>
               </a>
@@ -110,8 +110,9 @@
         </li>
 
         <li class="nav-item">
-          <!-- <a href="{{ url('/client/withdraw/'.$current_time) }}" class="nav-link"> -->
-          <a href="javascript:void(0);" class="nav-link">
+        
+          <a href="{{ url('/client/withdrawn/') }}" class="nav-link">
+            <!-- <a href="javascript:void(0);" class="nav-link"> -->
             <i class="fa fa-th-list"></i>&nbsp;
             <p>
               Withdraw
@@ -131,24 +132,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
 <script type="text/javascript">
-   var url = "{{ url('/') }}";
-    $('.nav-pills').find('li a').each(function() {
-        str1 = window.location.href;
-        str2 = "process_mining";
-        str3 = "affiliates"; 
-        str4 = "javascript:void(0);";
-       
-   
-        if ($(this).attr('href') == window.location.href) {
-            $(this).addClass('active');
-        } else if ((str1.indexOf(str2) != -1)) {
-            $("#my_token").addClass('active');
-        } else if ((str1.indexOf(str3) != -1)) {
-            $("#affiliate_user").addClass('active');
-        } else if ((str1.indexOf(str4) != -1)) {
-            $("#tree").addClass('active');
-        }
-    });
+  var url = "{{ url('/') }}";
+  $('.nav-pills').find('li a').each(function() {
+    str1 = window.location.href;
+    str2 = "process_mining";
+    str3 = "affiliates";
+    str4 = "javascript:void(0);";
+    str5 = "withdrawn";
+    str6 = "affilate-history";
+
+
+    if ($(this).attr('href') == window.location.href) {
+      $(this).addClass('active');
+    } else if ((str1.indexOf(str2) != -1)) {
+      $("#my_token").addClass('active');
+    } else if ((str1.indexOf(str3) != -1)) {
+      $("#affiliate_user").addClass('active');
+    } else if ((str1.indexOf(str4) != -1)) {
+      $("#tree").addClass('active');
+    } else if ((str1.indexOf(str5) != -1)) {
+      $("#withdrawn").addClass('active');
+    } else if ((str1.indexOf(str6) != -1)) {
+      $("#affiliate_history").addClass('active');
+    }
+  });
 </script>
 <!-- 
 <script type="text/javascript">

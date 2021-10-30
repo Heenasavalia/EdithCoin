@@ -21,6 +21,24 @@ use Illuminate\Support\Facades\Redirect;
 
 class TokenController extends Controller
 {
+    public function AffiliateHistory(){
+        // dump("run page");
+        $me = Auth::user();
+        $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
+        // dump($my_direct);
+        $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
+        // dump($income_done);
+
+        $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->get();
+        // dump($my_income);
+
+        return view('client.affiliate_history',['my_income'=>$my_income]);
+
+
+
+        dd("Stop here!");
+    }
+
     public function my_minig_tokens()
     {
         $payment_token =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->sum('amount_total_fiat');
@@ -34,7 +52,7 @@ class TokenController extends Controller
 
     public function withdraw()
     {
-        dump("yesh page run");
+        // dump("yesh page run");
         return view('client.token.withdraw');
     }
 
@@ -207,27 +225,14 @@ class TokenController extends Controller
         $data['one_token_price'] = (float)$one_token_price;
         $data['is_mining'] = 0;
 
-
-
-
-
-
         $token = Token::create($data);
 
-
         if ($token) {
-            // $creat_affilate_income = AffilateIncome::create([
-            //     'client_id' => $client_id,
-            //     'direct_id' => $$my_up_lavel->id,
-            //     'affilate_amount' => $total_usd_amount,
-            //     'affilate_token' =>  $no_of_token,
-            // ]);
-            // dump("it's work");
-
+           
             // payment
-            // if($client_id != 1){
-            //     $income = Helpers::AffilateIncome($client, $no_of_token);
-            // }
+            if($client_id != 1){
+                $income = Helpers::AffilateIncome($client, $no_of_token,$token->id);
+            }
 
 
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
