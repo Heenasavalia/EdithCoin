@@ -1,33 +1,7 @@
 @extends('client.layout.client_layout')
 
 @section('content')
-<style>
-  span#amount-error,
-  span#no_of_token-error {
-    color: red;
-  }
 
-  .input-icon {
-    position: relative;
-  }
-
-  .input-icon>i {
-    position: absolute;
-    display: block;
-    transform: translate(0, -50%);
-    top: 50%;
-    pointer-events: none;
-    width: 25px;
-    text-align: center;
-    font-style: normal;
-  }
-
-  .input-icon>input {
-    padding-left: 25px;
-    padding-right: 0;
-  }
-
-</style>
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
@@ -45,10 +19,15 @@
 </div>
 <!-- /.content-header -->
 
-<div class="content">
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      @include('client.layout.flash')
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-5">
         <!-- general form elements -->
         <div class="card card-primary">
           <div class="card-header">
@@ -56,20 +35,32 @@
           </div>
           <!-- /.card-header -->
           <!-- form start -->
-          <form id="add_withdraw" class="form-horizontal" method="POST" action="{{ url('/client/token') }}">
+          <form id="add_withdraw" class="form-horizontal" method="POST" action="{{ url('/client/withdrawn') }}">
             {{ csrf_field() }}
             <div class="card-body">
 
-              
+              <div class="col-lg-12 col-md-12 col-sm-12">
 
-              <div class="col-lg-4 col-md-4 col-sm-4">
-                <div class="form-group{{ $errors->has('amount') ? ' has-error' : '' }}" id="amt_div">
-                  <label for="exampleInputPassword1">Enter your amount</label>
+                <div class="form-group{{ $errors->has('withdrawn_amount') ? ' has-error' : '' }}">
+                  <input id="withdrawn_amount" type="text" class="form-control" name="withdrawn_amount" autocomplete="off" placeholder="Enter withdrawn amount*">
 
+                  @if ($errors->has('withdrawn_amount'))
+                  <span class="help-block">{{ $errors->first('withdrawn_amount') }}</span>
+                  @endif
                 </div>
               </div>
 
-              
+              <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="form-group{{ $errors->has('withdrawn_address') ? ' has-error' : '' }}">
+                  <input id="withdrawn_address" type="text" class="form-control" name="withdrawn_address" autocomplete="off" placeholder="Enter withdrawn address*">
+
+                  @if ($errors->has('withdrawn_address'))
+                  <span class="help-block">{{ $errors->first('withdrawn_address') }}</span>
+                  @endif
+                </div>
+              </div>
+
+
 
             </div>
             <!-- /.card-body -->
@@ -77,6 +68,8 @@
               <button id="send" type="submit" class="btn btn-primary">Submit</button>
             </div>
           </form>
+
+
         </div>
         <!-- /.card -->
 
@@ -86,7 +79,7 @@
     </div>
   </div>
   <!-- /.container-fluid -->
-</div>
+</section>
 
 
 @endsection
@@ -106,7 +99,7 @@
 
   $("#add_withdraw").validate({
     errorElement: 'span',
-    errorClass: 'help-block',
+    errorClass: 'help-block text-danger',
     highlight: function(element, errorClass, validClass) {
       $(element).closest('.form-group').addClass("has-error");
     },
@@ -118,23 +111,21 @@
       //error.appendTo();
     },
     rules: {
-      amount: {
+      withdraw_amount: {
         required: true,
         digits: true,
         noSpace: true,
       },
-      no_of_token: {
+      withdraw_address: {
         required: true,
-        digits: true,
-        noSpace: true,
       },
     },
     messages: {
-      amount: {
-        required: "Please enter Amount",
+      withdraw_amount: {
+        required: "Please enter withdrawn amount",
       },
-      no_of_token: {
-        required: "Please enter Token",
+      withdraw_address: {
+        required: "Please enter withdrawn address",
       },
     },
 
