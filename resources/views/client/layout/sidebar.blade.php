@@ -101,7 +101,8 @@
               </a>
             </li>
             <li class="nav-item">
-              <a id="affiliate_history" href="{{ url('/client/affiliate-history/'.$current_time)}}" class="nav-link" id="process_mining">
+              <!-- <a id="affiliate_history" href="{{ url('/client/affiliate-history/'.$current_time)}}" class="nav-link" id="process_mining"> -->
+              <a href="javascript:void(0);" class="nav-link">
                 <i class="fas fa-clock"></i>&nbsp;
                 <p>Affiliate History</p>
               </a>
@@ -111,8 +112,8 @@
 
         <li class="nav-item">
         
-          <a href="{{ url('/client/withdrawn/') }}" class="nav-link">
-            <!-- <a href="javascript:void(0);" class="nav-link"> -->
+          <!-- <a href="{{ url('/client/withdrawn/') }}" class="nav-link"> -->
+            <a href="javascript:void(0);" class="nav-link">
             <i class="fa fa-th-list"></i>&nbsp;
             <p>
               Withdraw

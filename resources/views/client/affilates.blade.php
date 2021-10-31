@@ -51,7 +51,12 @@
                 @foreach($my_directs as $my_direct)
                 <tr>
                   <td style="padding: 5px 10px;">{{$my_direct->unique_id}}</td>
+                  
+                  @if($my_direct->client_name != null)
                   <td style="padding: 5px 10px;">{{$my_direct->client_name}}</td>
+                  @else
+                  <td style="padding: 5px 10px;">-</td>
+                  @endif
                   <td style="padding: 5px 10px;">{{$my_direct->first_name}} {{$my_direct->last_name}}</td>
                   <td style="padding: 5px 10px;">{{$my_direct->email}}</td>
                   <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($my_direct->created_at)) }}</td>

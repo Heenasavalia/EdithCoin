@@ -52,7 +52,12 @@
                 @foreach($my_income as $my_direct)
                 <tr>
                   <td style="padding: 5px 10px;">{{$my_direct->client->unique_id}}</td>
+                  @if($my_direct->client->client_name != null)
                   <td style="padding: 5px 10px;">{{$my_direct->client->client_name}}</td>
+                  @else
+                  <td style="padding: 5px 10px;">-</td>
+                  @endif
+
                   <td style="padding: 5px 10px;">{{$my_direct->client->first_name}} {{$my_direct->client->last_name}}</td>
                   <td style="padding: 5px 10px;">{{$my_direct->no_of_token}}</td>
                   <td style="padding: 5px 10px;">{{$my_direct->affiliate_income}}</td>
@@ -60,6 +65,15 @@
                 </tr>
                 @endforeach
               </tbody>
+              <tfoot>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>Total</td>
+                  <td>{{$affiliate_income}}</td>
+                </tr>
+              </tfoot>
             </table>
           </div>
           <!-- /.mail-box-messages -->

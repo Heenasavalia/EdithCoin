@@ -22,21 +22,11 @@ use Illuminate\Support\Facades\Redirect;
 class TokenController extends Controller
 {
     public function AffiliateHistory(){
-        // dump("run page");
         $me = Auth::user();
         $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
-        // dump($my_direct);
         $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
-        // dump($income_done);
-
         $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->get();
-        // dump($my_income);
-
-        return view('client.affiliate_history',['my_income'=>$my_income]);
-
-
-
-        dd("Stop here!");
+        return view('client.affiliate_history',['my_income'=>$my_income, 'affiliate_income' => $my_income->sum('affiliate_income')]);
     }
 
     public function my_minig_tokens()
@@ -50,47 +40,19 @@ class TokenController extends Controller
         return response()->json($total_token);
     }
 
-    public function withdraw()
-    {
-        // dump("yesh page run");
-        return view('client.token.withdraw');
-    }
-
     public function affilates()
     {
         $client = Auth::user();
         $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->get();
         return view('client.affilates', ['my_directs' => $my_directs]);
     }
+
     public function getaffilatesusers(Request $request)
     {
         $id = $request->all()['client_id'];
-
         $me = Client::where('id', $id)->first();
-
         $data = Client::where('sponsor_id', $me->unique_id)->where('status', 'Active')->get();
-        //dd($id);
         return datatables::of($data)->make(true);
-    }
-
-    public function affilate()
-    {
-        // dd("yes");
-        $client = Auth::user();
-        // $my_directs = Client::where('sponsor_id', $client->unique_id)->orderBy('created_at', 'DESC')->paginate(10);
-        $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->pluck('id')->toArray();
-        // dd($my_directs);
-        // 
-        $token = Token::with('client', 'affilate')->whereIn('client_id', $my_directs)->get();
-        //dump($token);
-
-        // dd($token);
-        $my_income = AffilateIncome::with('sender')->where('direct_id', $client->id)->get();
-
-        $merged = $token->merge($my_income);
-        // dd($merged);
-
-        return view('client.affilate', ['token' => $token, 'my_income' => $my_income, 'merged' => $merged]);
     }
 
     /**
@@ -100,11 +62,6 @@ class TokenController extends Controller
      */
     public function getRemainingToken()
     {
-        // dd("yes");
-        // $response = [
-        //     'success' => 0,
-        //     'messages'
-        // ];
         $get_tokens = CountToken::first();
         return response()->json($get_tokens);
     }
@@ -116,16 +73,11 @@ class TokenController extends Controller
         if ($request->ajax()) {
             $id = $request->all()['client_id'];
             if ($request->from_date != '' && $request->to_date != '') {
-
                 $startdate = Carbon::parse($request->all()['from_date'])->format('Y-m-d H:i:s');
                 $enddate = Carbon::parse($request->all()['to_date'])->format('Y-m-d H:i:s');
                 $data =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->whereBetween('created_at', [$startdate, $enddate])->get();
                 // $data = Token::where('client_id', $id)->whereBetween('created_at', [$startdate, $enddate])->get();
             }
-            // dd($data);
-            // return view('client.home', [
-            //     'tokens' => $data
-            // ]);
             return json_encode($data);
         }
     }
@@ -148,12 +100,16 @@ class TokenController extends Controller
         $total_amt = Token::where('client_id', Auth::user()->id)->sum('total_amount');
         // $tokens = Token::where('client_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
-        $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->paginate(10);
-        // dump($tokens->items[]);
-
-        // $coin = CoinpaymentTransactionItem::
+        $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->get();
 
         $affilate_income = AffilateIncome::where('direct_id', Auth::user()->id)->sum('affilate_amount');
+
+
+
+        $me = Auth::user();
+        $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
+        $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
+        $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->sum('affiliate_income');
 
         return view('client.home', [
             // 'result' => $result,
@@ -162,7 +118,8 @@ class TokenController extends Controller
             'total' => $total,
             'total_amt' => $total_amt,
             'tokens' => $tokens,
-            'affilate_income' => $affilate_income
+            'affilate_income' => $affilate_income,
+            'my_income' => $my_income
         ]);
     }
 
