@@ -27,7 +27,8 @@ class ApiController extends Controller
     }
 
     public function ClientPasswordScriptapi() {
-        $clients = Client::where('id', 10)->get();
+        // $clients = Client::where('id', 10)->get();
+        $clients = Client::get();
         $client_password = bcrypt('123123');
         foreach ($clients as $c) {
             $c->update([

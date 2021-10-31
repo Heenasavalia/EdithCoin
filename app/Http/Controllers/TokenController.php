@@ -154,12 +154,9 @@ class TokenController extends Controller
         $data = $request->all();
         $client_id = Auth::user()->id;
         // $client_id = 1;
-
         $client = Auth::user();
         // $client = Client::find($client_id);
-
         $plan = $data['plan'];
-
         $one_token_price = Helpers::getonetokenprice($client->created_at);
 
         if ($plan == "token") {
@@ -171,27 +168,20 @@ class TokenController extends Controller
             $total_amount = $amount;
             unset($data['amount']);
         }
-
-
-
+        // dd($total_amount);
         // payment gateway
-
         $data['client_id'] = $client_id;
         $data['no_of_token'] = $no_of_token;
         $data['total_amount'] = number_format($total_amount, 2);
         $data['one_token_price'] = (float)$one_token_price;
         $data['is_mining'] = 0;
-
+        // dd($data['total_amount']);
         $token = Token::create($data);
-
         if ($token) {
-           
             // payment
             if($client_id != 1){
-                $income = Helpers::AffilateIncome($client, $no_of_token,$token->id);
+                $income = Helpers::AffilateIncomeCalculate($client, $no_of_token,$token->id,number_format($total_amount, 2));
             }
-
-
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             // print_r($transaction);
             // // dd();
