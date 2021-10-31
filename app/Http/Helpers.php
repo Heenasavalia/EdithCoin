@@ -12,41 +12,39 @@ use Hexters\CoinPayment\CoinPayment;
 
 class Helpers
 {
-    public static function AffilateIncome($client, $no_of_token,$id)
+    public static function AffilateIncomeCalculate($client, $no_of_token, $id, $total_amount)
     {
+        // dump("in helper");
+        // dump($client, $no_of_token, $id, $total_amount);
 
         $my_up_lavel = Client::where('unique_id', $client->sponsor_id)->first();
 
         if ($no_of_token <= 50000) {
             // dump("In 50,000");
-            $total_token = ($no_of_token * 5) / 100;
+            $total_affilate_income = ($total_amount * 5) / 100;
         } elseif ($no_of_token > 50000 && $no_of_token <= 100000) {
             // dump("In 50,000 to 1,00,000");
-            $total_token = ($no_of_token * 10) / 100;
+            $total_affilate_income = ($total_amount * 10) / 100;
         } elseif ($no_of_token > 100000 && $no_of_token <= 500000) {
             // dump("In 1,00,000 to 5,00,000");
-            $total_token = ($no_of_token * 15) / 100;
+            $total_affilate_income = ($total_amount * 15) / 100;
         } elseif ($no_of_token > 500000 && $no_of_token <= 999999) {
             // dump("In 5,00,000 to 9,99,999");
-            $total_token = ($no_of_token * 20) / 100;
+            $total_affilate_income = ($total_amount * 20) / 100;
         } else {
             // dump("last else");
-            $total_token = $no_of_token;
+            $total_affilate_income = $total_amount;
         }
-
         $one_token_price = Helpers::getonetokenprice($client->created_at);
-        $total_usd_amount = $total_token * $one_token_price;
-
-        $update_income = Token::where('id',$id)->update(['affiliate_income' => $total_usd_amount]);
-
+        $update_income = Token::where('id', $id)->update(['affiliate_income' => $total_affilate_income]);
         $creat_affilate_income = AffilateIncome::create([
             'client_id' => $client->id,
             'direct_id' => $my_up_lavel->id,
-            'affilate_amount' => number_format($total_usd_amount, 2),
-            'affilate_token' => number_format((float) $total_token, 6, '.', ''),
+            'affilate_amount' => number_format($total_affilate_income, 2),
+            'affilate_token' => number_format((float) $no_of_token, 6, '.', ''),
         ]);
 
-        return $total_usd_amount;
+        return $total_affilate_income;
     }
 
     public static function getonetokenprice($created_at)

@@ -77,7 +77,7 @@
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>0 $</h3>
+            <h3>{{$my_income}}</h3>
 
             <p>Affiliate Income</p>
           </div>
