@@ -63,7 +63,7 @@
               <div class="form-group">
                 <label for="exampleInputEmail1">How do you want to purchase fix amout or token ? </label>
                 </br>
-                <input type="radio" name="plan" checked value="amount"> Amount
+                <input type="radio" name="plan" checked value="amount"> Amount &nbsp;&nbsp;
                 <input type="radio" name="plan" value="token"> No Of Tokens
               </div>
 
