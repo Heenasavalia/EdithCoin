@@ -18,6 +18,9 @@ use Hexters\CoinPayment\Entities\CoinpaymentTransaction;
 use Hexters\CoinPayment\Entities\CoinpaymentTransactionItem;
 use Illuminate\Support\Facades\Redirect;
 
+use  Detection\MobileDetect;
+
+
 
 class TokenController extends Controller
 {
@@ -26,7 +29,13 @@ class TokenController extends Controller
         $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
         $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
         $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->get();
-        return view('client.affiliate_history',['my_income'=>$my_income, 'affiliate_income' => $my_income->sum('affiliate_income')]);
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+        return view('client.affiliate_history',['my_income'=>$my_income, 'affiliate_income' => $my_income->sum('affiliate_income'),'is_mobile'=>$is_mobile]);
     }
 
     public function my_minig_tokens()
@@ -44,7 +53,13 @@ class TokenController extends Controller
     {
         $client = Auth::user();
         $my_directs = Client::where('sponsor_id', $client->unique_id)->where('status', 'Active')->orderBy('created_at', 'DESC')->get();
-        return view('client.affilates', ['my_directs' => $my_directs]);
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+        return view('client.affilates', ['my_directs' => $my_directs,'is_mobile'=>$is_mobile]);
     }
 
     public function getaffilatesusers(Request $request)
@@ -102,7 +117,6 @@ class TokenController extends Controller
 
         $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->get();
 
-        $affilate_income = AffilateIncome::where('direct_id', Auth::user()->id)->sum('affilate_amount');
 
 
 
@@ -111,6 +125,17 @@ class TokenController extends Controller
         $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
         $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->sum('affiliate_income');
 
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+
+        // dd($is_mobile);
+
+
+
         return view('client.home', [
             // 'result' => $result,
             'all_tokens' => $all_tokens,
@@ -118,8 +143,8 @@ class TokenController extends Controller
             'total' => $total,
             'total_amt' => $total_amt,
             'tokens' => $tokens,
-            'affilate_income' => $affilate_income,
-            'my_income' => $my_income
+            'my_income' => $my_income,
+            'is_mobile' => $is_mobile
         ]);
     }
 
@@ -139,7 +164,13 @@ class TokenController extends Controller
      */
     public function create()
     {
-        return view('client.token.create');
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+        return view('client.token.create',['is_mobile'=>$is_mobile]);
     }
 
     /**
@@ -277,7 +308,13 @@ class TokenController extends Controller
         $mining = $client->is_mining;
         $my_tokens = Token::where('client_id', $client->id)->where('is_mining', 1)->get();
         // dd($my_token);
-        return view('client.token.process_mining', ['mining' => $mining, 'my_tokens' => $my_tokens]);
+        $detect = new MobileDetect;
+        if ($detect->isMobile()) {
+            $is_mobile = true;
+        } else {
+            $is_mobile = false;
+        }
+        return view('client.token.process_mining', ['mining' => $mining, 'my_tokens' => $my_tokens,'is_mobile'=>$is_mobile]);
     }
 
 

@@ -1,3 +1,4 @@
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
   <!-- Left navbar links -->
   <ul class="navbar-nav">
@@ -17,5 +18,6 @@
     <form id="logout-form" action="{{ url('client/logout') }}" method="POST" style="display: none;">
       {{ csrf_field() }}
     </form>
+    
   </div>
 </nav>

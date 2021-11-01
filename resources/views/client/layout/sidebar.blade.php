@@ -3,7 +3,21 @@
   img.img-circle.elevation-2 {
     margin-top: 14px;
   }
+
+  span.space {
+    margin-right: 1%;
+  }
+
+  input#myInput {
+    display: none;
+  }
+
+  i.fa.fa-link.fa-2x {
+    background: #c2c7d0;
+    border-radius: 13%;
+  }
 </style>
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a href="javascript:void(0)" class="brand-link">
@@ -32,7 +46,39 @@
           @endif
 
         </a>
+      </div>
 
+    </div>
+
+    <div class="row">
+
+      <?php
+      $sponsor_link = url('/') . "/client/register?sponsor_id=" . Auth::user()->unique_id;
+      if ($is_mobile == true) {
+        $wp_url = "https://api.whatsapp.com/send?text=" . $sponsor_link;
+      } else {
+        $wp_url = "https://web.whatsapp.com/send?text=" . $sponsor_link;
+      }
+
+      $fb_url = "http://www.facebook.com/share.php?u=" . $sponsor_link;
+      $tw_url = "https://twitter.com/share?url=" . $sponsor_link . "&amp;text=Edith Token Sponsor Registration Link";
+      $ln_url = "http://www.linkedin.com/shareArticle?mini=true&amp;url=" . $sponsor_link;
+
+
+      ?>
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <p class="p_social">
+          <span class="space wp"><a target="_blank" href="{{$wp_url}}"><i class="fab fa-whatsapp-square fa-2x" aria-hidden="true"></i></a></span>
+          <span class="space"><a target="_blank" href="{{$fb_url}}"><i class="fab fa-facebook-square fa-2x" aria-hidden="true"></i></a></span>
+          <span class="space"><a target="_blank" href="{{$tw_url}}"><i class="fab fa-twitter-square fa-2x" aria-hidden="true"></i></a></span>
+          <span class="space"><a target="_blank" href="{{$ln_url}}"><i class="fab fa-linkedin fa-2x" aria-hidden="true"></i></a></span>
+          <span class="space"><a target="_blank" href="sms:?body={{$sponsor_link}}"><i class="fas fa-sms fa-2x" aria-hidden="true"></i></a></span>
+
+          <input class="sponsor_link" type="text" value="{{$sponsor_link}}" id="myInput">
+          <span title="Copy" onclick="myFunction()"><i class="fa fa-link fa-2x" aria-hidden="true"></i>
+        </p>
+        <!-- <span class="space"><a target="_blank" href=""><i class="far fa-copy fa-2x"></i></a></span> -->
+        </p>
       </div>
     </div>
 
@@ -196,6 +242,16 @@
       }
     });
   });
+</script>
+
+
+<script>
+  function myFunction() {
+    var copyText = document.getElementById("myInput");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); /* For mobile devices */
+    navigator.clipboard.writeText(copyText.value);
+  }
 </script>
 
 @endpush('scripts')

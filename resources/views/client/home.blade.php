@@ -2,11 +2,18 @@
 
 @section('content')
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<style>
+  .social_span.wp {
+    background: #5ad06d;
+    border-radius: 50%
+  }
+</style>
 
 <div class="content-header">
   <div class="container-fluid">
@@ -92,6 +99,8 @@
     <!-- /.col-md-6 -->
 
   </div>
+
+  
 
   <!-- /.row -->
   <div class="row">

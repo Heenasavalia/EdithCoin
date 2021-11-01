@@ -109,6 +109,16 @@
             </div>
           </div>
 
+          @if($sponsor != "000000000")
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group{{ $errors->has('sponsor_id') ? ' has-error' : '' }}">
+              <input readonly id="sponsor_id" type="text" class="form-control" name="sponsor_id" value="{{$sponsor}}" autofocus placeholder="Sponsor Id (Optional)">
+              <div id="name_division" class="col-lg-12col-sm-12" style="display:none">
+                <label class="business_label" for="sponsor_id"><span id="sp_name"></span></label>
+              </div>
+            </div>
+          </div>
+          @else
           <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group{{ $errors->has('sponsor_id') ? ' has-error' : '' }}">
               <input id="sponsor_id" type="text" class="form-control" name="sponsor_id" value="{{ old('sponsor_id') }}" autofocus placeholder="Sponsor Id (Optional)">
@@ -123,6 +133,8 @@
 
             </div>
           </div>
+
+          @endif
 
 
           <div class="form-group">

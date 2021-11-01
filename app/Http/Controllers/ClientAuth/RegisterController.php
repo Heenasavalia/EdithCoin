@@ -7,6 +7,7 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -92,9 +93,14 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
-        return view('client.auth.register');
+        // dump("page run");
+
+        $data = $request->all();
+        $sponsor = (isset($data['sponsor_id'])) ? $data['sponsor_id'] : "000000000";
+        // dd($sponsor);
+        return view('client.auth.register',['sponsor' => $sponsor]);
     }
 
     /**
