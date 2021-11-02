@@ -52,7 +52,7 @@
         <!-- general form elements -->
         <div class="card card-primary">
           <div class="card-header">
-            <h3 class="card-title">Purchase Token</h3>
+            <h3 class="card-title"><b>Purchase Token</b></h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
@@ -111,7 +111,7 @@
             </div>
             <!-- /.card-body -->
             <div class="card-footer">
-              <button id="send" type="submit" class="btn btn-primary">Submit</button>
+              <button id="send" type="submit" class="btn btn-primary"><b>Submit</b></button>
             </div>
           </form>
         </div>

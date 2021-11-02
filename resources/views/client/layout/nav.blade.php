@@ -15,7 +15,7 @@
   <div class="">
 
     <a href="javascript:void(0);" class="nav-btn" id="logout">
-      Logout <i class="fa fa-sign-out" aria-hidden="true"></i>
+      <b>Logout</b> <i class="fa fa-sign-out" aria-hidden="true"></i>
     </a>
 
     <form id="logout-form" action="{{ url('client/logout') }}" method="POST" style="display: none;">
