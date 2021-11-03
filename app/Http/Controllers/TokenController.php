@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AffilateIncome;
+use App\AffiliateBonus;
 use Illuminate\Http\Request;
 use App\Token;
 use App\Client;
@@ -24,18 +25,19 @@ use  Detection\MobileDetect;
 
 class TokenController extends Controller
 {
-    public function AffiliateHistory(){
+    public function AffiliateHistory()
+    {
         $me = Auth::user();
-        $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
+        $my_direct = Client::where('sponsor_id', $me->unique_id)->pluck('email')->toArray();
         $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
-        $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->get();
+        $my_income = Token::with('client')->whereIn('token_order_id', $income_done)->get();
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
             $is_mobile = true;
         } else {
             $is_mobile = false;
         }
-        return view('client.affiliate_history',['my_income'=>$my_income, 'affiliate_income' => $my_income->sum('affiliate_income'),'is_mobile'=>$is_mobile]);
+        return view('client.affiliate_history', ['my_income' => $my_income, 'affiliate_income' => $my_income->sum('affiliate_income'), 'is_mobile' => $is_mobile]);
     }
 
     public function my_minig_tokens()
@@ -59,7 +61,7 @@ class TokenController extends Controller
         } else {
             $is_mobile = false;
         }
-        return view('client.affilates', ['my_directs' => $my_directs,'is_mobile'=>$is_mobile]);
+        return view('client.affilates', ['my_directs' => $my_directs, 'is_mobile' => $is_mobile]);
     }
 
     public function getaffilatesusers(Request $request)
@@ -111,7 +113,7 @@ class TokenController extends Controller
 
         $all_tokens_mining = Token::where('client_id', Auth::user()->id)->where('is_mining', 1)->sum('no_of_token');
 
-        $total = $all_tokens + $all_tokens_mining;
+        
         $total_amt = Token::where('client_id', Auth::user()->id)->sum('total_amount');
         // $tokens = Token::where('client_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
@@ -121,30 +123,35 @@ class TokenController extends Controller
 
 
         $me = Auth::user();
-        $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
-        $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
-        $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->sum('affiliate_income');
+        // $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
+        // $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
+        // $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->sum('affiliate_income');
 
+        $my_income = AffiliateBonus::where('client_id', $me->id)->pluck('affiliate_amount')->first();
+
+        $bonus_purchase = Token::where('client_id', $me->id)->where('is_bonus','1')->sum('no_of_token');
+
+        $total = $all_tokens + $all_tokens_mining + $bonus_purchase;
+        // dd($bonus_purchase);
+
+        // dd($my_income);
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
             $is_mobile = true;
         } else {
             $is_mobile = false;
         }
-
-        // dd($is_mobile);
-
-
-
         return view('client.home', [
-            // 'result' => $result,
-            'all_tokens' => $all_tokens,
-            'all_tokens_mining' => $all_tokens_mining,
-            'total' => $total,
+           
+            'all_tokens' => number_format((float)$all_tokens, 6, '.', ''),
+            'all_tokens_mining' =>  number_format((float)$all_tokens_mining, 6, '.', ''),
+            'total' => number_format((float)$total, 6, '.', ''),
             'total_amt' => $total_amt,
             'tokens' => $tokens,
             'my_income' => $my_income,
-            'is_mobile' => $is_mobile
+            'is_mobile' => $is_mobile,
+            'bonus_purchase' => number_format((float)$bonus_purchase, 6, '.', ''),
+
         ]);
     }
 
@@ -170,7 +177,7 @@ class TokenController extends Controller
         } else {
             $is_mobile = false;
         }
-        return view('client.token.create',['is_mobile'=>$is_mobile]);
+        return view('client.token.create', ['is_mobile' => $is_mobile]);
     }
 
     /**
@@ -181,8 +188,9 @@ class TokenController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        // dump($request);
         $data = $request->all();
+        // dd($data);
         $client_id = Auth::user()->id;
         // $client_id = 1;
         $client = Auth::user();
@@ -207,36 +215,46 @@ class TokenController extends Controller
         $data['one_token_price'] = (float)$one_token_price;
         $data['is_mining'] = 0;
         // dd($data['total_amount']);
+        if ($data['is_bonus'] == 1) {
+            $get_my_balance = AffiliateBonus::where('client_id', $client_id)->first();
+            // ->sum('affiliate_amount') $my_income->sum('affiliate_income')
+            if ($get_my_balance->affiliate_amount > 1) {
+                if ($total_amount < $get_my_balance->affiliate_amount) {
+                    $data['is_bonus'] = '1';
+                    $cut_balance = $get_my_balance->update([
+                        'affiliate_amount' => $get_my_balance->affiliate_amount - number_format($total_amount, 2)
+                    ]);
+                    $token = Token::create($data);
+                    if ($token) {
+                        if ($client_id != 1) {
+                            $income = Helpers::AffilateIncomeCalculate($client, $no_of_token, $token->id, $total_amount);
+                        }
+                        return redirect()->back()->with('success', 'Successfully Purchase done.');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'Oops, you do not have sufficient balance to complete this operation');
+                }
+            } else {
+                return redirect()->back()->with('error', 'Oops, you do not have sufficient balance to complete this operation');
+            }
+        }
         $token = Token::create($data);
         if ($token) {
             // payment
-            if($client_id != 1){
-                $income = Helpers::AffilateIncomeCalculate($client, $no_of_token,$token->id,$total_amount);
+            if ($client_id != 1) {
+                $income = Helpers::AffilateIncomeCalculate($client, $no_of_token, $token->id, $total_amount);
             }
+            
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
-            // print_r($transaction);
-            // // dd();
-            // dd($transaction);
-            // dd("fail t");
-            // if($transaction['cancel_url']){
-            //     $get = Token::where('id',$token->id)->delete();
-            // }
-            // dd($transaction);
             $remove_token = CountToken::first();
-            // dd($remove_token);
             if ($remove_token) {
                 $min = $remove_token->total_count - $no_of_token;
                 $num = number_format((float)$min, 6, '.', '');
                 $update = $remove_token->update(['total_count' => $num]);
             }
-
-
             return Redirect::to($transaction);
-
-            // return redirect('client/home')->with('success', 'Successfully Purchase done.');
         } else {
-            dump("jrgh");
-            dd("fail");
+            // dd("fail");
             return redirect()->back()->with('error', 'Oops, Something went wrong.');
         }
     }
@@ -314,7 +332,7 @@ class TokenController extends Controller
         } else {
             $is_mobile = false;
         }
-        return view('client.token.process_mining', ['mining' => $mining, 'my_tokens' => $my_tokens,'is_mobile'=>$is_mobile]);
+        return view('client.token.process_mining', ['mining' => $mining, 'my_tokens' => $my_tokens, 'is_mobile' => $is_mobile]);
     }
 
 

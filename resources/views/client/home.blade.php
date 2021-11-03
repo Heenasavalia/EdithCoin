@@ -41,7 +41,9 @@
         <!-- small box -->
         <div class="small-box bg-info">
           <div class="inner">
-            <h3>{{$all_tokens}}</h3>
+            <!-- <h3>{{$all_tokens}}+{{$bonus_purchase}} <span style="font-size: 20px;">(Bonus token)</span></h3> -->
+
+            <span style="font-size: 17px;">{{$all_tokens}}+{{$bonus_purchase}} (Bonus token)</span>
 
             <p>Tokens</p>
           </div>
@@ -84,8 +86,11 @@
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3>{{$my_income}}</h3>
-
+            @if($my_income != null)
+            <h3>{{$my_income}} $</h3>
+            @else
+            <h3>0 $</h3>
+            @endif
             <p>Affiliate Income</p>
           </div>
           <div class="icon">
@@ -100,7 +105,7 @@
 
   </div>
 
-  
+
 
   <!-- /.row -->
   <div class="row">
@@ -115,6 +120,7 @@
                 <tr>
                   <th>Total Amount (USD)</th>
                   <th>Total Token</th>
+
                   <th>Transaction Time</th>
                 </tr>
               </thead>
@@ -139,15 +145,12 @@
                     $to = \Carbon\Carbon::parse($created_at->format("Y-m-d"));
                     $diff_in_days = $to->diffInDays($from);
 
-                    if ($diff_in_days > 30) {
-                      $one_token_price  = 0.08;
-                    }
-
                     $amount = (float) $token->amount_total_fiat;
                     $result = $amount / $one_token_price;
                     ?>
                     {{$result}}
                   </td>
+
 
                   <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($token->created_at)) }}</td>
                 </tr>

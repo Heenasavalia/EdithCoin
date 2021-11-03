@@ -26,7 +26,6 @@
     padding-left: 25px;
     padding-right: 0;
   }
-
 </style>
 <div class="content-header">
   <div class="container-fluid">
@@ -45,7 +44,12 @@
 </div>
 <!-- /.content-header -->
 
-<div class="content">
+<section class="content">
+  <div class="row">
+    <div class="col-md-6">
+      @include('client.layout.flash')
+    </div>
+  </div>
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -59,6 +63,7 @@
           <form id="add_token" class="form-horizontal" method="POST" action="{{ url('/client/token') }}">
             {{ csrf_field() }}
             <div class="card-body">
+              <input type="hidden" name="is_bonus" id="is_bonus" value="0" />
 
               <div class="form-group">
                 <label for="exampleInputEmail1">How do you want to purchase fix amout or token ? </label>
@@ -70,21 +75,14 @@
               <div class="col-lg-4 col-md-4 col-sm-4">
                 <div class="form-group{{ $errors->has('amount') ? ' has-error' : '' }}" id="amt_div">
                   <label for="exampleInputPassword1">Enter your amount</label>
-
-                 
                   <div class="input-icon">
-                    <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount" autocomplete="off">
+                    <input type="text" name="amount" class="form-control" id="amount" placeholder="Amount" autocomplete="off" required>
                     <i>$</i>
                   </div>
-
-                  
-
                   <small class="text-danger">{{ $errors->first('amount') }}</small>
-                  Token Price:- 0.05<b>$</b> </br>
+                  Token Price:- {{ Config::get('constants.one_token_price') }} <b>$</b> </br>
                   Total Token count:-
-
                   <b><span id="total_records"></span></b>
-
                   </br>
                 </div>
               </div>
@@ -93,17 +91,11 @@
                 <!-- <p>OR</p> -->
                 <div class="form-group{{ $errors->has('no_of_token') ? ' has-error' : '' }}" id="tkn_div">
                   <label for="exampleInputEmail1">Enter No of Token</label>
-
-                  
-
-                  <input type="text" name="no_of_token" class="form-control" id="no_of_token" placeholder="Token" autocomplete="off">
+                  <input type="text" name="no_of_token" class="form-control" id="no_of_token" placeholder="Token" autocomplete="off" required>
                   <small class="text-danger">{{ $errors->first('no_of_token') }}</small>
-                  Token Price:- 0.05<b>$</b> </br>
+                  Token Price:- {{ Config::get('constants.one_token_price') }} <b>$</b> </br>
                   Total Amount:-
-
                   <b><span id="total_amount"></span></b>
-
-
                   </br>
                 </div>
               </div>
@@ -112,6 +104,8 @@
             <!-- /.card-body -->
             <div class="card-footer">
               <button id="send" type="submit" class="btn btn-primary"><b>Submit</b></button>
+              <!-- <button type="submit" class="btn btn-primary" ><b>Buy from Bounce</b></button> -->
+              <a href="javascript:void(0)" class="btn btn-primary saveasbonus"><b>Buy from Bounce</b></a>
             </div>
           </form>
         </div>
@@ -123,7 +117,7 @@
     </div>
   </div>
   <!-- /.container-fluid -->
-</div>
+</section>
 
 
 @endsection
@@ -132,6 +126,11 @@
 <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-validation/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-validation/additional-methods.min.js') }}"></script>
+
+
+
+
+
 
 <script type="text/javascript">
   $(document).ready(function() {
@@ -239,6 +238,20 @@
       form.submit();
     }
 
+  });
+</script>
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $(".saveasbonus").click(function() {
+      console.log('click save btn');
+      $("input[name=is_bonus]").val("1");
+      console.log($("input[name=is_bonus]").val("1"));
+      $('#send').removeAttr("type").attr("type", "button");
+
+      $("#add_token").submit();
+    });
   });
 </script>
 

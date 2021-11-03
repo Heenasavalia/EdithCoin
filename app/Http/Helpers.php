@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Token;
 use App\Client;
 use App\AffilateIncome;
+use App\AffiliateBonus;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\DataTables;
 use Hexters\CoinPayment\CoinPayment;
@@ -16,6 +17,7 @@ class Helpers
     {
         // dump("in helper");
         // dump($client, $no_of_token, $id, $total_amount);
+        // dd("syp");
 
         $my_up_lavel = Client::where('unique_id', $client->sponsor_id)->first();
 
@@ -37,19 +39,16 @@ class Helpers
         }
         $one_token_price = Helpers::getonetokenprice($client->created_at);
         $update_income = Token::where('id', $id)->update(['affiliate_income' => $total_affilate_income]);
-        $creat_affilate_income = AffilateIncome::create([
-            'client_id' => $client->id,
-            'direct_id' => $my_up_lavel->id,
-            'affilate_amount' => number_format($total_affilate_income, 2),
-            'affilate_token' => number_format((float) $no_of_token, 6, '.', ''),
-        ]);
 
+        $sum = Token::where('client_id',$client->id)->sum('affiliate_income');
+        $upd = AffiliateBonus::where('client_id',$my_up_lavel->id)->update(['affiliate_amount'=>$sum]);
+        // dd('helper stop');
         return $total_affilate_income;
     }
 
     public static function getonetokenprice($created_at)
     {
-        $one_token_price  = 0.05;
+        $one_token_price  = 0.06;
 
         $mytime = \Carbon\Carbon::now();
         $date = $mytime->toDateTimeString();
@@ -57,9 +56,9 @@ class Helpers
         $to = \Carbon\Carbon::parse($created_at->format("Y-m-d"));
         $diff_in_days = $to->diffInDays($from);
 
-        if ($diff_in_days > 30) {
-            $one_token_price  = 0.08;
-        }
+        // if ($diff_in_days > 30) {
+        //     $one_token_price  = 0.08;
+        // }
         // dd($one_token_price);
         return $one_token_price;
     }
