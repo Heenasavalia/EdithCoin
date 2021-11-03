@@ -113,36 +113,35 @@ class TokenController extends Controller
 
         $all_tokens_mining = Token::where('client_id', Auth::user()->id)->where('is_mining', 1)->sum('no_of_token');
 
-        
+
         $total_amt = Token::where('client_id', Auth::user()->id)->sum('total_amount');
         // $tokens = Token::where('client_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
 
         $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->get();
 
-
-
-
         $me = Auth::user();
-        // $my_direct = Client::where('sponsor_id',$me->unique_id)->pluck('email')->toArray();
-        // $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
-        // $my_income = Token::with('client')->whereIn('token_order_id',$income_done)->sum('affiliate_income');
-
         $my_income = AffiliateBonus::where('client_id', $me->id)->pluck('affiliate_amount')->first();
-
-        $bonus_purchase = Token::where('client_id', $me->id)->where('is_bonus','1')->sum('no_of_token');
-
+        $bonus_purchase = Token::where('client_id', $me->id)->where('is_bonus', '1')->sum('no_of_token');
         $total = $all_tokens + $all_tokens_mining + $bonus_purchase;
         // dd($bonus_purchase);
 
-        // dd($my_income);
+        $income_done = CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->pluck('order_id')->toArray();
+        // dd($income_done);
+        $my_token = Token::with('client')->whereIn('token_order_id', $income_done)->sum('no_of_token');
+
+
+        // dd($my_token);
+
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
             $is_mobile = true;
         } else {
             $is_mobile = false;
         }
+
+        // dd($tokens->sum('$tokens'));
         return view('client.home', [
-           
+            'my_token' => number_format((float)$my_token, 6, '.', ''),
             'all_tokens' => number_format((float)$all_tokens, 6, '.', ''),
             'all_tokens_mining' =>  number_format((float)$all_tokens_mining, 6, '.', ''),
             'total' => number_format((float)$total, 6, '.', ''),
@@ -244,7 +243,7 @@ class TokenController extends Controller
             if ($client_id != 1) {
                 $income = Helpers::AffilateIncomeCalculate($client, $no_of_token, $token->id, $total_amount);
             }
-            
+
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             $remove_token = CountToken::first();
             if ($remove_token) {
