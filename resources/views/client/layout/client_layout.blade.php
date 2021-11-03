@@ -17,6 +17,8 @@
 
   <link rel="stylesheet" href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('css/client.css') }}">
+
   
 </head>
 
