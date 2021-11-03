@@ -48,7 +48,7 @@ class Helpers
 
     public static function getonetokenprice($created_at)
     {
-        $one_token_price  = 0.06;
+        $one_token_price  = 0.05;
 
         $mytime = \Carbon\Carbon::now();
         $date = $mytime->toDateTimeString();

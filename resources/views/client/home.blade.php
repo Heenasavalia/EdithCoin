@@ -86,11 +86,12 @@
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            @if($my_income != null)
+            <!-- @if($my_income != null)
             <h3>{{$my_income}} $</h3>
             @else
             <h3>0 $</h3>
-            @endif
+            @endif -->
+            <h3>0 $I</h3>
             <p>Affiliate Income</p>
           </div>
           <div class="icon">
