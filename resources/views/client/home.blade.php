@@ -43,7 +43,7 @@
           <div class="inner">
             <!-- <h3>{{$all_tokens}}+{{$bonus_purchase}} <span style="font-size: 20px;">(Bonus token)</span></h3> -->
 
-            <span style="font-size: 17px;">{{$all_tokens}}+{{$bonus_purchase}} (Bonus token)</span>
+            <span style="font-size: 17px;">{{$my_token}}+{{$bonus_purchase}} (Bonus token)</span>
 
             <p>Tokens</p>
           </div>
