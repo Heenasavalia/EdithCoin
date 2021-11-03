@@ -211,7 +211,7 @@ class TokenController extends Controller
         if ($token) {
             // payment
             if($client_id != 1){
-                $income = Helpers::AffilateIncomeCalculate($client, $no_of_token,$token->id,number_format($total_amount, 2));
+                $income = Helpers::AffilateIncomeCalculate($client, $no_of_token,$token->id,$total_amount);
             }
             $transaction = Helpers::payement($total_amount, $plan, $client->name, $client->email, $one_token_price, $no_of_token, $token->id, $client->created_at);
             // print_r($transaction);
