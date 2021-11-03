@@ -2,13 +2,44 @@
 
 namespace App\Http\Controllers;
 
+use App\AffiliateBonus;
 use App\Client;
+use App\Token;
 use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
 
-    public function check_client_name($username){
+    public function createAffiliateBonus()
+    {
+        $all_client = Client::where('status', 'Active')->get();
+        foreach ($all_client as $c) {
+            $update = AffiliateBonus::create([
+                'client_id' => $c->id
+            ]);
+        }
+        dump("done");
+    }
+
+    public function AllAffiliateIncome()
+    {
+        $all_client = Client::where('status', 'Active')->get();
+        $token = Token::get();
+        $affiliate_bouns = AffiliateBonus::get();
+        foreach ($all_client as $c) {
+            $token = Token::where('client_id', $c->id)->get()->sum('affiliate_income');
+            $update = AffiliateBonus::where('client_id',$c->id)->update([
+                'affiliate_amount' => $token
+            ]);
+            dump($c->id);
+            dump("---upd---");
+        }
+        dd("Stop here");
+    }
+
+
+    public function check_client_name($username)
+    {
         // dump($username);
         // dd($request);
         $client = Client::where('client_name', $username)->first();
@@ -23,12 +54,12 @@ class ApiController extends Controller
             'client_name' => $client_name,
         ];
         return response()->json($data);
-
     }
 
-    public function ClientPasswordScriptapi() {
-        // $clients = Client::where('id', 10)->get();
-        $clients = Client::get();
+    public function ClientPasswordScriptapi()
+    {
+        $clients = Client::where('id', 23)->get();
+        // $clients = Client::get();
         $client_password = bcrypt('123123');
         foreach ($clients as $c) {
             $c->update([
@@ -68,7 +99,7 @@ class ApiController extends Controller
         // $account_id = mt_rand(10000000, 99999999);
         dump($nub);
 
-        $pass = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3). mt_rand(100000, 999999);
+        $pass = substr(str_shuffle("ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3) . mt_rand(100000, 999999);
         dd($pass);
     }
 

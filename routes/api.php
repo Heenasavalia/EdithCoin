@@ -26,3 +26,5 @@ Route::get('UserName', 'ApiController@UserName');
 Route::get('pwdscriptapi', 'ApiController@ClientPasswordScriptapi');
 
 Route::get('check_client_name/{username}', 'ApiController@check_client_name');
+Route::get('createAffiliateBonus','ApiController@createAffiliateBonus');
+Route::get('AllAffiliateIncome','ApiController@AllAffiliateIncome');

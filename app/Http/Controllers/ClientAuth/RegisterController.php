@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ClientAuth;
 
+use App\AffiliateBonus;
 use App\Client;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -84,6 +85,11 @@ class RegisterController extends Controller
             'client_name' => $data['client_name'],
             'password' => bcrypt($data['password']),
         ]);
+        if($client){
+            $affiliate = AffiliateBonus::create([
+                'client_id' => $client->id
+            ]);
+        }
 
         return $client;
     }
