@@ -105,7 +105,7 @@
             <div class="card-footer">
               <button id="send" type="submit" class="btn btn-primary"><b>Submit</b></button>
               <!-- <button type="submit" class="btn btn-primary" ><b>Buy from Bounce</b></button> -->
-              <a href="javascript:void(0)" class="btn btn-primary saveasbonus"><b>Buy from Bounce</b></a>
+              <!-- <a href="javascript:void(0)" class="btn btn-primary saveasbonus"><b>Buy from Bounce</b></a> -->
             </div>
           </form>
         </div>
