@@ -41,9 +41,9 @@
         <!-- small box -->
         <div class="small-box bg-info">
           <div class="inner">
-            <!-- <h3>{{$all_tokens}}+{{$bonus_purchase}} <span style="font-size: 20px;">(Bonus token)</span></h3> -->
+            <h3>{{$all_tokens}}</h3>
 
-            <span style="font-size: 17px;">{{$my_token}}+{{$bonus_purchase}} (Bonus token)</span>
+            <!-- <span style="font-size: 17px;">{{$my_token}}+{{$bonus_purchase}} (Bonus token)</span> -->
 
             <p>Tokens</p>
           </div>
@@ -91,7 +91,7 @@
             @else
             <h3>0 $</h3>
             @endif -->
-            <h3>0 $I</h3>
+            <h3>{{$my_income}}</h3>
             <p>Affiliate Income</p>
           </div>
           <div class="icon">
