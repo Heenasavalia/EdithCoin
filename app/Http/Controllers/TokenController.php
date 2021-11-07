@@ -109,28 +109,17 @@ class TokenController extends Controller
         $amount = $payment_token;
         $all_tokens = $amount / $one_token_price;
 
-
-
         $all_tokens_mining = Token::where('client_id', Auth::user()->id)->where('is_mining', 1)->sum('no_of_token');
-
 
         $total_amt = Token::where('client_id', Auth::user()->id)->sum('total_amount');
         // $tokens = Token::where('client_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10);
-
         $tokens =  CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->orderBy('id', 'DESC')->get();
 
         $me = Auth::user();
-        $my_income = AffiliateBonus::where('client_id', $me->id)->pluck('affiliate_amount')->first();
+       
         $bonus_purchase = Token::where('client_id', $me->id)->where('is_bonus', '1')->sum('no_of_token');
         $total = $all_tokens + $all_tokens_mining + $bonus_purchase;
-        // dd($bonus_purchase);
-
         $income_done = CoinpaymentTransaction::where('buyer_email', Auth::user()->email)->where('status', '100')->pluck('order_id')->toArray();
-        // dd($income_done);
-        $my_token = Token::with('client')->whereIn('token_order_id', $income_done)->sum('no_of_token');
-
-
-        // dd($my_token);
 
         $detect = new MobileDetect;
         if ($detect->isMobile()) {
@@ -139,16 +128,21 @@ class TokenController extends Controller
             $is_mobile = false;
         }
 
+        $me = Auth::user();
+        $my_direct = Client::where('sponsor_id', $me->unique_id)->pluck('email')->toArray();
+        $income_done = CoinpaymentTransaction::whereIn('buyer_email', $my_direct)->where('status', '100')->pluck('order_id')->toArray();
+        $my_income_new = Token::with('client')->whereIn('token_order_id', $income_done)->sum('affiliate_income');
         // dd($tokens->sum('$tokens'));
         return view('client.home', [
-            'my_token' => number_format((float)$my_token, 6, '.', ''),
+            // 'my_token' => number_format((float)$my_token, 6, '.', ''),
             'all_tokens' => number_format((float)$all_tokens, 6, '.', ''),
             'all_tokens_mining' =>  number_format((float)$all_tokens_mining, 6, '.', ''),
             'total' => number_format((float)$total, 6, '.', ''),
             'total_amt' => $total_amt,
             'tokens' => $tokens,
-            'my_income' => $my_income,
+            // 'my_income' => $my_income,
             'is_mobile' => $is_mobile,
+            'my_income_new' => $my_income_new,
             'bonus_purchase' => number_format((float)$bonus_purchase, 6, '.', ''),
 
         ]);

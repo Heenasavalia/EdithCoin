@@ -47,7 +47,7 @@
               <tbody>
                 @if ($my_income->count() == 0)
                 <tr>
-                  <td colspan="5" style="text-align:center;">No Income to display.</td>
+                  <td colspan="7" style="text-align:center;">No Income to display.</td>
                 </tr>
                 @endif
                 @foreach($my_income as $my_direct)
@@ -70,6 +70,7 @@
                   <td></td>
                   <td>Total</td>
                   <td>{{$affiliate_income}}</td>
+                  <td></td>
                 </tr>
               </tfoot>
             </table>
