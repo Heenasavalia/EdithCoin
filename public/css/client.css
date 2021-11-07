@@ -1,3 +1,16 @@
 .color-primary {
     color: #007bff!important;
 }
+
+@media screen and (max-width: 767px) {
+    .small-box h3 {
+        font-size: 1.5rem;
+    }
+
+    body, .btn-group-lg>.btn, .btn-lg {
+        font-size: 14px !important;
+    }
+    .content-header h1 {
+        font-size: 18px;
+    }
+}
