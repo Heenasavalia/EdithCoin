@@ -42,9 +42,6 @@
         <div class="small-box bg-info">
           <div class="inner">
             <h3>{{$all_tokens}}</h3>
-
-            <!-- <span style="font-size: 17px;">{{$my_token}}+{{$bonus_purchase}} (Bonus token)</span> -->
-
             <p>Tokens</p>
           </div>
           <div class="icon">
@@ -58,12 +55,10 @@
         <div class="small-box bg-success">
           <div class="inner">
             <h3>{{$all_tokens_mining}}</h3>
-
             <p>Mined Tokens</p>
           </div>
           <div class="icon">
             <i class="nav-icon fas fa-ellipsis-h"></i>
-
           </div>
           <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
         </div>
@@ -73,7 +68,6 @@
         <div class="small-box bg-danger">
           <div class="inner">
             <h3>{{$total}}</h3>
-
             <p>Total Tokens</p>
           </div>
           <div class="icon">
@@ -86,12 +80,7 @@
         <!-- small box -->
         <div class="small-box bg-warning">
           <div class="inner">
-            <!-- @if($my_income != null)
-            <h3>{{$my_income}} $</h3>
-            @else
-            <h3>0 $</h3>
-            @endif -->
-            <h3>{{$my_income}}</h3>
+            <h3>{{$my_income_new}}</h3>
             <p>Affiliate Income</p>
           </div>
           <div class="icon">
@@ -103,10 +92,7 @@
       <!-- /.col-md-6 -->
     </div>
     <!-- /.col-md-6 -->
-
   </div>
-
-
 
   <!-- /.row -->
   <div class="row">
@@ -121,7 +107,6 @@
                 <tr>
                   <th>Total Amount (USD)</th>
                   <th>Total Token</th>
-
                   <th>Transaction Time</th>
                 </tr>
               </thead>
@@ -151,8 +136,6 @@
                     ?>
                     {{$result}}
                   </td>
-
-
                   <td style="padding: 5px 10px;">{{ date('d M Y H:i:s', strtotime($token->created_at)) }}</td>
                 </tr>
 
